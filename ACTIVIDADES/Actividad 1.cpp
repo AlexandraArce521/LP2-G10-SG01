@@ -15,6 +15,8 @@ struct Inventario {
 };
  //Objeto 
 Inventario grupo[3];
+int sumaProduct = 0;
+
 int main()
 {
     
@@ -45,7 +47,7 @@ void funcionEmpleado()
 {
     
     list <string> lista1;
-    int opcEm, sumaProduct = 3, limitProduct = 10, cantidadProduct = 0;
+    int opcEm, limitProduct = 3, cantidadProduct;
     
     lista1 = {
             "Menú (EMPLEADOS)",
@@ -67,32 +69,50 @@ void funcionEmpleado()
         cout << "Inventario"<< endl;
         for (int i = 0; i < sumaProduct; i++ )
            {  
-            cout << "Producto:" << grupo[i].nombreProduc << "," << "Cantidad" << grupo[i].Cantidad << "," << "Precio:"<< grupo[i].Precio<< endl;
+            cout << "Producto: " << grupo[i].nombreProduc << "," << "Cantidad: " << grupo[i].Cantidad << "," << "Precio: "<< grupo[i].Precio<< endl;
            }
         break;
     }
-    case 2:
-    {
-        cout << "¿Cúantos productos va a ingresar?" << endl;
-        cin >> cantidadProduct;
+    case 2: {
         
-        for (int a = 0; a < cantidadProduct; a++)
+        if (sumaProduct >= limitProduct) {
+            cout << "Error!: Capacidad máxima del inventario." << endl;
+            break;
+        }
+
+        cout << "¿Cuántos productos va a ingresar?" << endl;
+        cin >> cantidadProduct;
+
+        if (sumaProduct + cantidadProduct > limitProduct) 
+        {
+            cout << "Solo puede ingresar " << limitProduct - sumaProduct << " productos más." << endl;
+            cantidadProduct = limitProduct - sumaProduct;
+        }
+
+        for (int a = 0; a < cantidadProduct; a++) 
         {
             cout << "Ingrese el NOMBRE del producto: " << endl;
             cin >> grupo[a].nombreProduc;
-            
-            cout << "Ingrese el PRECIO del producto" << endl;
+
+            cout << "Ingrese el PRECIO del producto: " << endl;
             cin >> grupo[a].Precio;
-            
+
             cout << "Ingrese la CANTIDAD que guardará del producto: " << endl;
             cin >> grupo[a].Cantidad;
-            
-            cout << "Ingrese una pequeña DESCRIPCIÓN del producto:" << endl;
-            cin >> grupo[a].Descrip;
+
+            cout << "Ingrese una pequeña DESCRIPCIÓN del producto: " << endl;
+            cin >> grupo[a].Descrip; 
+
+            sumaProduct++; // Incrementar productos
         }
         break;
     }
     
+    case 3:
+    {
+        //Reporte general
+    } 
+        
     }
     
 }
