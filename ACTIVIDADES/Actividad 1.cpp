@@ -4,73 +4,97 @@
 
 using namespace std;
 
-void AgregarProduct (void);
+void funcionEmpleado ();
+//void funcionCliente ();
+
+struct Inventario {
+    string nombreProduc;
+    float Precio;
+    int Cantidad;
+    string Descrip;
+};
 
 int main()
 {
-    int TipoPer = 0;
-    list <string> lista1;
-    int opcionEm;
-
     
-    lista1 = {"Menú (EMPLEADOS)","1. Ver Productos","2. Agregar nuevos productos","3. Reporte General","4. Ver Pedidos","5. Gestor de inventario"};
+    int TipoUsuario = 0;
     
-    cout << "Tipo de usuario:" << endl;
-    cout << "1. Empleado" << endl;
-    cout << "2. Cliente" << endl;
-    cout << "Eliga una opción: " << endl;
-    cin >> TipoPer;
+    cout << "Ingrese que tipo de empleado:" << endl;
+    cin >> TipoUsuario;
     
-    do 
-    {   //OPCIONES PARA EL EMPLEADO
-        if(TipoPer == 1)
-        {
-            for(string elemento1: lista1)
-                cout << elemento1 << endl;
-            cout << "Eliga una opcion como EMPLEADO: " << endl;
-            cin >> opcionEm;
-            switch (opcionEm)   {
-                case 1:
-                   { struct Productos;
-                        string nombre;
-                        int cantidad;
-                        float precio;
-                   }
-                break;
-                
-                case 2: 
-                    AgregarProduct();
-                break;
-            }
-        }
-        
-        
-        //OPCIONES PARA EL CLIENTE
-        if (TipoPer == 2)
-        {
+    do
+    {
+        if (TipoUsuario == 1)
+            funcionEmpleado();
             
-        }
-    } while (TipoPer == 1 and TipoPer == 2);
-       
+        else if (TipoUsuario == 2)
+            //funcionCliente();
+            cout << "Eres cliente" << endl;
+        else
+           { 
+            cout << "Usuario no encontrado" << endl;
+            cout << "Incorrecto. Ingrese que tipo de empleado:" << endl;
+            cin >> TipoUsuario;
+           }
+    } while (TipoUsuario >= 1 && TipoUsuario <= 3);
+    return 0;
 }
 
-void AgregarProduct (void)
+void funcionEmpleado()
+{
+     //Objeto 
+    Inventario grupo[3];
+    
+    list <string> lista1;
+    int opcEm, sumaProduct = 3, limitProduct = 10, cantidadProduct = 0;
+    
+    lista1 = {
+            "Menú (EMPLEADOS)",
+            "1. Ver Productos",
+            "2. Agregar nuevos productos",
+            "3. Reporte General",
+            "4. Gestor de inventario"
+    };
+            
+    for(string opcion: lista1)
+        cout << opcion << endl;
+            
+    cout << "Eliga una opción: " << endl;
+    cin >> opcEm;
+    
+    switch (opcEm) {
+    case 1:
     {
-        int newProduct,cantidad;
-        string product;
-        float precio; 
-        
-        cout << "Ingrese la cantidad de productos nuevos: " <<endl;
-        cin >> newProduct;
-                    
-        for(int i = 0; i < newProduct; i = i + 1)
-            {
-                cout << "Ingrese el NOMBRE del producto" << endl;
-                cin >> product;
-                cout << "Ingrese el PRECIO del producto: " << endl;
-                cin >> precio;
-                cout << "Ingrese la CANTIDAD del producto" << endl;
-                cin >> cantidad;
-            }  
+        cout << "Inventario"<< endl;
+        for (int i = 0; i < sumaProduct; i++ )
+           {  
+            cout << "Producto:" << grupo[i].nombreProduc << "," << "Cantidad" << grupo[i].Cantidad << "," << "Precio:"<< grupo[i].Precio<< endl;
+           }
+        break;
     }
+    case 2:
+    {
+        cout << "¿Cúantos productos va a ingresar?" << endl;
+        cin >> cantidadProduct;
+        
+        for (int a = 0; a < cantidadProduct; a++)
+        {
+            cout << "Ingrese el NOMBRE del producto: " << endl;
+            cin >> grupo[a].nombreProduc;
+            
+            cout << "Ingrese el PRECIO del producto" << endl;
+            cin >> grupo[a].Precio;
+            
+            cout << "Ingrese la CANTIDAD que guardará del producto: " << endl;
+            cin >> grupo[a].Cantidad;
+            
+            cout << "Ingrese una pequeña DESCRIPCIÓN del producto:" << endl;
+            cin >> grupo[a].Descrip;
+        }
+        break;
+    }
+    
+    }
+    
+}
 
