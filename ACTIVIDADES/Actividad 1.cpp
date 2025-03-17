@@ -13,7 +13,8 @@ struct Inventario {
     int Cantidad;
     string Descrip;
 };
-
+ //Objeto 
+Inventario grupo[3];
 int main()
 {
     
@@ -42,8 +43,6 @@ int main()
 
 void funcionEmpleado()
 {
-     //Objeto 
-    Inventario grupo[3];
     
     list <string> lista1;
     int opcEm, sumaProduct = 3, limitProduct = 10, cantidadProduct = 0;
