@@ -4,6 +4,7 @@
 
 using namespace std;
 
+//Maquetado
 void funcionEmpleado ();
 //void funcionCliente ();
 
@@ -16,6 +17,7 @@ struct Inventario {
  //Objeto 
 Inventario grupo[3];
 int sumaProduct = 0;
+
 
 int main()
 {
@@ -48,13 +50,14 @@ void funcionEmpleado()
     
     list <string> lista1;
     int opcEm, limitProduct = 3, cantidadProduct;
+    cout << " " << endl;    
     
     lista1 = {
             "Menú (EMPLEADOS)",
             "1. Ver Productos",
             "2. Agregar nuevos productos",
             "3. Reporte General",
-            "4. Gestor de inventario"
+            "4. Salir"
     };
             
     for(string opcion: lista1)
@@ -62,17 +65,19 @@ void funcionEmpleado()
             
     cout << "Eliga una opción: " << endl;
     cin >> opcEm;
+    cout << " " << endl;
     
     switch (opcEm) {
     case 1:
     {
-        cout << "Inventario"<< endl;
+        cout << "----Inventario-----"<< endl;
         for (int i = 0; i < sumaProduct; i++ )
            {  
             cout << "Producto: " << grupo[i].nombreProduc << "," << "Cantidad: " << grupo[i].Cantidad << "," << "Precio: "<< grupo[i].Precio<< endl;
            }
         break;
     }
+    
     case 2: {
         
         if (sumaProduct >= limitProduct) {
@@ -92,16 +97,16 @@ void funcionEmpleado()
         for (int a = 0; a < cantidadProduct; a++) 
         {
             cout << "Ingrese el NOMBRE del producto: " << endl;
-            cin >> grupo[a].nombreProduc;
+            cin >> grupo[sumaProduct].nombreProduc;
 
             cout << "Ingrese el PRECIO del producto: " << endl;
-            cin >> grupo[a].Precio;
+            cin >> grupo[sumaProduct].Precio;
 
             cout << "Ingrese la CANTIDAD que guardará del producto: " << endl;
-            cin >> grupo[a].Cantidad;
+            cin >> grupo[sumaProduct].Cantidad;
 
             cout << "Ingrese una pequeña DESCRIPCIÓN del producto: " << endl;
-            cin >> grupo[a].Descrip; 
+            cin >> grupo[sumaProduct].Descrip; 
 
             sumaProduct++; // Incrementar productos
         }
@@ -111,8 +116,42 @@ void funcionEmpleado()
     case 3:
     {
         //Reporte general
-    } 
+        float SaldoProduct = 0;
+        int o;
+        cout << "----REPORTE GENERAL-----" << endl;
+        cout << "1. La cantidad total de productos es: " << sumaProduct << endl;
         
+        cout << "2. Los productos son: " << endl;
+        for (int o = 0; o < sumaProduct; o++) 
+        {
+            cout << "- " << grupo[o].nombreProduc
+                 << ", Precio: " << grupo[o].Precio
+                 << ", Cantidad: " << grupo[o].Cantidad << endl;
+        }
+
+        
+        for (int r = 0; r < sumaProduct; r++)
+        {
+            SaldoProduct += grupo[r].Cantidad * grupo[r].Precio;
+        }
+        cout << "3. El valor total del inventario es: " << SaldoProduct << "$" << endl;
+        break;
+        
+    } 
+    
+    case 4:
+    {
+        cout << "Cerrando sistema..." << endl;
+        exit(0); //Cerrar programa
+    }
+    
+    default:
+    {
+        cout << "Opción no valida. Intentelo de nuevo " << endl; 
+        break;
+    }
+    
+    
     }
     
 }
