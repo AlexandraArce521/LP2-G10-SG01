@@ -72,7 +72,7 @@ public:
 };
 
 int main() {
-    Producto p1("Laptop", 1500.50, 10);
+    Producto p1("Audífonos", 300.50, 10);
     Producto p2("Mouse", 25.75, 50);
     Producto p3("Teclado", 45.00, 30);
 
