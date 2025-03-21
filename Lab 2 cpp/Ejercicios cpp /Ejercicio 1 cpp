@@ -1,17 +1,31 @@
 #include <iostream>
 #include <vector>
+#include <cstdlib>
+#include <ctime>
 using namespace std;
 
-class Carrera   {
-    
-    
-    
-};
-
-class Auto   {
-    
-    
-    
+class Auto {
+public:
+    void nivelDificult(int opcDifi) {
+        int random_number;
+        switch (opcDifi) {
+            case 1:
+                random_number = (rand() % 14 + 3) * 5;
+                cout << "La velocidad del vehículo en dificultad fácil es: " << random_number << " km/h" << endl;
+                break;
+            case 2:
+                random_number = (rand() % 10 + 5) * 5;
+                cout << "La velocidad del vehículo en dificultad media es: " << random_number << " km/h" << endl;
+                break;
+            case 3:
+                random_number = (rand() % 8 + 7) * 5;
+                cout << "La velocidad del vehículo en dificultad pro es: " << random_number << " km/h" << endl;
+                break;
+            default:
+                cout << "Dificultad no válida." << endl;
+                break;
+        }
+    }
 };
 
 int obtenerOpcionValida(string mensaje, vector<int> opciones) {
@@ -19,7 +33,6 @@ int obtenerOpcionValida(string mensaje, vector<int> opciones) {
     while (true) {
         cout << mensaje;
         cin >> opcion;
-        
         for (int op : opciones) {
             if (opcion == op) {
                 return opcion;
@@ -29,25 +42,8 @@ int obtenerOpcionValida(string mensaje, vector<int> opciones) {
     }
 }
 
-
-
-int obtenerOpcionValida(string mensaje, vector<int> opciones) {
-    int opcion;
-    while (true) {
-        cout << mensaje;
-        cin >> opcion;
-        
-        for (int op : opciones) {
-            if (opcion == op) {
-                return opcion;
-            }
-        }
-        cout << "Opción no válida. Intente de nuevo.\n";
-    }
-}
-
-
-int main()  {
+int main() {
+    srand(static_cast<unsigned int>(time(0)));
 
     string nombreJugador;
     cout << "----- JUEGO DE CARRERAS -----" << endl;
@@ -55,14 +51,14 @@ int main()  {
     cin >> nombreJugador;
     cout << "Bienvenido, " << nombreJugador << "!" << endl;
 
-    // FUNCION PARA VALIDAR DATOS, 
-    // ESTA ENVIANDO UN MENSAJE, Y UN VEcTOR CON LAS OPCIONES
     int opcDistance = obtenerOpcionValida("Elija la distancia de la carrera:\n1. 50m\n2. 100m\n3. 150m\nSeleccione: ", {50, 100, 150});
     int opcDifi = obtenerOpcionValida("Elija la dificultad:\n1. Fácil\n2. Medio\n3. Pro\nSeleccione: ", {1, 2, 3});
 
-    
-    
+    cout << "Distancia de la carrera: " << opcDistance << " metros." << endl;
+    cout << "Nivel de dificultad: " << (opcDifi == 1 ? "Fácil" : (opcDifi == 2 ? "Medio" : "Pro")) << endl;
+
+    Auto autos;
+    autos.nivelDificult(opcDifi);
+
     return 0;
 }
-
-
