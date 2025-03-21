@@ -44,7 +44,13 @@ int obtenerOpcionValida(string mensaje, vector<int> opciones) {
 
 int main() {
     srand(static_cast<unsigned int>(time(0)));
-
+    int cantidadJugadores;
+    
+    cout << "¿Cuantos jugadores son? (1 o 2): ";
+    cin >> cantidadJugadores;
+    
+    for (int i = 0; i < cantidadJugadores; i++) {
+    
     string nombreJugador;
     cout << "----- JUEGO DE CARRERAS -----" << endl;
     cout << "Nombre del JUGADOR: ";
@@ -59,6 +65,8 @@ int main() {
 
     Auto autos;
     autos.nivelDificult(opcDifi);
+    
+    }
 
     return 0;
 }
