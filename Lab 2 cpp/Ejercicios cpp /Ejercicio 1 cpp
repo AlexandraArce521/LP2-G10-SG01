@@ -4,23 +4,45 @@
 #include <ctime>
 using namespace std;
 
+// CLASE AUTO - CARACTERISTICAS DEL AUTO (NIVEL)
 class Auto {
 public:
+    int velocidadJugador;
+        int velocidadCompu;  
+        
     void nivelDificult(int opcDifi) {
-        int random_number;
+
+        
         switch (opcDifi) {
             case 1:
-                random_number = (rand() % 14 + 3) * 5;
-                cout << "La velocidad del vehículo en dificultad fácil es: " << random_number << " km/h" << endl;
+                velocidadJugador = (rand() % 14 + 3) * 5;
+                cout << "La velocidad del vehículo (JUGADOR) en dificultad fácil es: " << velocidadJugador << " km/h" << endl;
+                
+                velocidadCompu = (velocidadJugador - 5);
+                cout << "La velocidad del vehículo (COMPUTADORA) es: " << velocidadCompu << " Km/h" << endl;
+                
                 break;
+                
             case 2:
-                random_number = (rand() % 10 + 5) * 5;
-                cout << "La velocidad del vehículo en dificultad media es: " << random_number << " km/h" << endl;
+                velocidadJugador = (rand() % 10 + 3) * 5;
+                cout << "La velocidad del vehículo (JUGADOR) en dificultad media es: " << velocidadJugador << " km/h" << endl;
+                
+                velocidadCompu = (rand() % 10 + 3) * 5;
+                cout << "La velocidad del vehículo (COMPUTADORA) es: " << velocidadCompu << " Km/h" << endl;
+                
                 break;
+                
             case 3:
-                random_number = (rand() % 8 + 7) * 5;
-                cout << "La velocidad del vehículo en dificultad pro es: " << random_number << " km/h" << endl;
+            
+            // EL JUGADOR SOLO GANARA SI OBTIENE LA VELOCIDAD CERCA O 80 KM/H
+                velocidadJugador = (rand() % 14 + 3) * 5;
+                cout << "La velocidad del vehículo (JUGADOR) en dificultad pro es: " << velocidadJugador << " km/h" << endl;
+                
+                velocidadCompu = min(80, velocidadJugador + 5);
+                cout << "La velocidad del vehículo (COMPUTADORA) es: " << velocidadCompu << " Km/h" << endl;
+                
                 break;
+                
             default:
                 cout << "Dificultad no válida." << endl;
                 break;
@@ -28,7 +50,47 @@ public:
     }
 };
 
-int obtenerOpcionValida(string mensaje, vector<int> opciones) {
+class miCarrera {
+    private:
+    
+    string nombreJugador, nombre;
+    float tiempoCompu, tiempoJugador;
+    int opcDistance, distancia;
+    int velocidadJugador, velocidadCompu;
+    
+    public:
+    
+    miCarrera (int distancia, string nombre)    {
+        opcDistance = distancia;        
+        tiempoCompu = tiempoJugador= 0;
+        nombreJugador = nombre;
+    }
+    
+    void Carrera (Auto &miAuto)  {
+        
+        this->tiempoJugador = (opcDistance * 1.0 / miAuto.velocidadJugador);
+        this->tiempoCompu = (opcDistance * 1.0 / miAuto.velocidadCompu);
+
+        
+        if (tiempoJugador < tiempoCompu)    {
+            
+            cout <<"El jugador hizo un tiempo de: " << tiempoJugador<<"\nEl ganador es: " << nombreJugador <<"!\n"<<endl;  
+        } 
+        
+        else if (tiempoCompu == tiempoJugador)    {
+            cout <<"El jugador hizo un tiempo de: "<< tiempoJugador <<"\nEl jugador hizo un tiempo de: "<< tiempoCompu<<"\nEs un empate!" << endl;
+        } 
+        
+        else if (tiempoJugador > tiempoCompu)   {
+            cout <<"la computadora hizo un tiempo de: "<< tiempoCompu << "\nEl ganador es: La computadora"<<"\nIntentalo la proxima vez!"<<endl;  
+        } else  {
+            cout << "Ganador no determinado!. Lo sentimos" << endl;
+        }
+    }
+};
+
+
+int obtenerOpcionValida(const string &mensaje, vector<int> opciones) {
     int opcion;
     while (true) {
         cout << mensaje;
@@ -44,12 +106,6 @@ int obtenerOpcionValida(string mensaje, vector<int> opciones) {
 
 int main() {
     srand(static_cast<unsigned int>(time(0)));
-    int cantidadJugadores;
-    
-    cout << "¿Cuantos jugadores son? (1 o 2): ";
-    cin >> cantidadJugadores;
-    
-    for (int i = 0; i < cantidadJugadores; i++) {
     
     string nombreJugador;
     cout << "----- JUEGO DE CARRERAS -----" << endl;
@@ -62,11 +118,14 @@ int main() {
 
     cout << "Distancia de la carrera: " << opcDistance << " metros." << endl;
     cout << "Nivel de dificultad: " << (opcDifi == 1 ? "Fácil" : (opcDifi == 2 ? "Medio" : "Pro")) << endl;
-
+    
+    // CREAR OBJETO
     Auto autos;
+    // LLAMAR AL MÉTODO "nivel de la dificultad" - A mayor dificultad menor velocidad
     autos.nivelDificult(opcDifi);
     
-    }
-
+    miCarrera carrera(opcDistance, nombreJugador);
+    carrera.Carrera(autos);
+    
     return 0;
 }
