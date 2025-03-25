@@ -1,0 +1,119 @@
+#include <iostream>
+#include <list>
+using namespace std;
+
+class Producto   {
+    private:
+    string nombreProducto;
+    float precioProducto;
+    int cantidadProducto;
+    
+    public:
+    
+    Producto (string _nombreProducto, float _precioProducto, int _cantidadProducto) {
+        nombreProducto = _nombreProducto;
+        precioProducto = _precioProducto;
+        cantidadProducto = _cantidadProducto;
+                  
+    }
+    
+    string getNombreProducto()  const  {
+        return nombreProducto;
+    }  
+    
+    float getPrecioProducto()  const  {
+        return precioProducto;
+    }  
+    
+    int getCantidadProducto()  const  {
+        return cantidadProducto;
+    }  
+    
+    void mostrarProducto() const {
+        cout 
+        << "Producto: " << nombreProducto 
+        << "\nPrecio: " << precioProducto 
+        << "\nCantidad: " << cantidadProducto << endl;
+    }
+};
+
+class Inventario    {
+    private:
+        list <Producto> productosDisponible;
+        list <Producto> productosNoDisponibles;
+        
+    public:
+        
+        void agregarProducto( const Producto& nuevoProducto)    {
+            if (nuevoProducto.getCantidadProducto() > 0)    {
+                productosDisponible.push_back(nuevoProducto);
+            } else  {
+                productosNoDisponibles.push_back(nuevoProducto);
+            }
+            
+            cout 
+            << "Producto agregado: " 
+            << nuevoProducto.getNombreProducto() << endl;
+        }
+        
+        void mostrarProductoDisponible () const {
+            cout << "---- Productos disponibles ----" << endl;
+            
+            for (const auto& producto : productosDisponible )   {
+                producto.mostrarProducto();
+            }
+        }
+    
+        void mostrarProductoNoDisponible () const {
+            cout << "---- Productos NO disponibles ----" << endl;
+            
+            for (const auto& producto : productosNoDisponibles )   {
+                producto.mostrarProducto();
+            }
+        }    
+
+
+};
+
+class Factura   {
+    private:
+    
+    string nombreCliente;
+    list <Inventario> facturaCliente;
+    string nombreProducto;
+    float precioProducto;
+    int cantidadProducto;
+    float totalPagar;
+    
+    
+    
+};
+
+int main()  {
+    
+    string nombreCliente;
+    list <string> menuPrincipal = {
+        "1. Agregar Producto.",
+        "2. Mostrar Reporte General.",
+        "3. Realizar pedido.",
+        "4. Factura del cliente."
+    };
+    
+    
+    cout << "Ingrese su nombre: ";
+    cin >> nombreCliente;
+    cout << "Bienvenido. " << nombreCliente << "!" << endl;
+    
+    cout << "\nMENÚ PRINCIPAL" << endl;
+    
+    for (const string& opcion: menuPrincipal)   {
+        cout << opcion << endl;
+    }
+    
+    return 0;
+}
+
+
+
+
+
