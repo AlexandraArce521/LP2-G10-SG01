@@ -18,7 +18,7 @@ public:
                 velocidadJugador = (rand() % 14 + 3) * 5;
                 cout << "\nLa velocidad del vehículo (JUGADOR) en dificultad fácil es: " << velocidadJugador << " km/h" << endl;
                 
-                velocidadCompu = (velocidadJugador - 5);
+                velocidadCompu = (velocidadJugador - (rand()%6));
                 cout << "\nLa velocidad del vehículo (COMPUTADORA) es: " << velocidadCompu << " Km/h" << endl;
                 
                 break;
@@ -135,3 +135,4 @@ int main() {
     carrera.Carrera(autos);
     
     return 0;
+}
