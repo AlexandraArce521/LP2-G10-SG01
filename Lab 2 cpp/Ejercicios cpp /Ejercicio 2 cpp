@@ -2,7 +2,8 @@
 #include <list>
 using namespace std;
 
-class Producto   {
+class Producto   
+{
     private:
     string nombreProducto;
     float precioProducto;
@@ -10,32 +11,37 @@ class Producto   {
     
     public:
     
-    Producto (string _nombreProducto, float _precioProducto, int _cantidadProducto) {
+    Producto (string _nombreProducto, float _precioProducto, int _cantidadProducto) 
+    {
         nombreProducto = _nombreProducto;
         precioProducto = _precioProducto;
         cantidadProducto = _cantidadProducto;
                   
     }
     
-    string getNombreProducto()  const  {
+    string getNombreProducto()  const  
+    {
         return nombreProducto;
     }  
     
-    float getPrecioProducto()  const  {
+    float getPrecioProducto()  const  
+    {
         return precioProducto;
     }  
     
-    int getCantidadProducto()  const  {
+    int getCantidadProducto()  const  
+    {
         return cantidadProducto;
     }  
     
-    void setCantidadProducto(int cantidad) { 
+    void setCantidadProducto(int cantidad) 
+    { 
         cantidadProducto = cantidad; 
-        
     }
 
     
-    void mostrarProducto() const {
+    void mostrarProducto() const 
+    {
         cout 
         << "Producto: " << nombreProducto 
         << "\nPrecio: " << precioProducto 
@@ -43,7 +49,8 @@ class Producto   {
     }
 };
 
-class Inventario    {
+class Inventario    
+{
     private:
         list <Producto> productosDisponible;
         list <Producto> productosNoDisponibles;
@@ -52,88 +59,108 @@ class Inventario    {
         
     public:
         
-    void agregarProducto(const Producto& nuevoProducto) {
-    productos.push_back(nuevoProducto); // Añadir el producto a la lista general
-
-    if (nuevoProducto.getCantidadProducto() > 0) {
-        productosDisponible.push_back(nuevoProducto);
-    } else {
-        productosNoDisponibles.push_back(nuevoProducto);
-    }
-
-    cout << "Producto agregado: " << nuevoProducto.getNombreProducto() << endl;
-}
+        void agregarProducto(const Producto& nuevoProducto) 
+        {
+            productos.push_back(nuevoProducto); // Añadir el producto a la lista general
         
-        void mostrarProductoDisponible () const {
+            if (nuevoProducto.getCantidadProducto() > 0) 
+            {
+                productosDisponible.push_back(nuevoProducto);
+            } 
+            else 
+            {
+                productosNoDisponibles.push_back(nuevoProducto);
+            }
+        
+            cout << "Producto agregado: " << nuevoProducto.getNombreProducto() << endl << endl;
+        }
+        
+        void mostrarProductoDisponible () const 
+        {
             cout << "---- Productos disponibles ----" << endl;
             
-            for (const auto& producto : productosDisponible )   {
+            for (const auto& producto : productosDisponible )   
+            {
                 producto.mostrarProducto();
             }
         }
     
-        void mostrarProductoNoDisponible () const {
+        void mostrarProductoNoDisponible () const 
+        {
             cout << "---- Productos NO disponibles ----" << endl;
             
-            for (const auto& producto : productosNoDisponibles )   {
+            for (const auto& producto : productosNoDisponibles )   
+            {
                 producto.mostrarProducto();
             }
         }    
         
-    Producto* buscarProducto(const string& nombre) {
-        for (auto& producto : productos) {
-            if (producto.getNombreProducto() == nombre) {
-                return &producto;
+        Producto* buscarProducto(const string& nombre) 
+        {
+            for (auto& producto : productos) {
+                if (producto.getNombreProducto() == nombre) 
+                {
+                    return &producto;
+                }
             }
+            return nullptr;
         }
-        return nullptr;
-    }
-
 
 };
 
 
-class Pedido {
+class Pedido 
+{
 private:
     list<Producto> productosEnPedido;
 
 public:
-    void agregarAlPedido(Producto* producto, int cantidad) {
+    void agregarAlPedido(Producto* producto, int cantidad) 
+    {
         
-        if (producto && producto->getCantidadProducto() >= cantidad) {
+        if (producto && producto->getCantidadProducto() >= cantidad) 
+        {
             
             productosEnPedido.push_back(Producto(producto->getNombreProducto(), producto->getPrecioProducto(), cantidad));
             producto->setCantidadProducto(producto->getCantidadProducto() - cantidad);
             cout << "Producto agregado al pedido: " << producto->getNombreProducto() << " x " << cantidad << endl;
             
-        } else {
+        } 
+        else 
+        {
             cout << "Producto no disponible o cantidad insuficiente." << endl;
         }
     }
 
-    float calcularTotal() const {
+    float calcularTotal() const 
+    {
         float total = 0;
-        for (const auto& producto : productosEnPedido) {
+        for (const auto& producto : productosEnPedido) 
+        {
             total += producto.getPrecioProducto() * producto.getCantidadProducto();
         }
         return total;
     }
 
-    void mostrarPedido() const {
+    void mostrarPedido() const 
+    {
         cout << "---- Pedido ----" << endl;
-        for (const auto& producto : productosEnPedido) {
+        for (const auto& producto : productosEnPedido) 
+        {
             producto.mostrarProducto();
             cout << "------------------------" << endl;
         }
         cout << "Total a pagar: " << calcularTotal() << endl;
     }
 
-    const list<Producto>& getProductos() const {
+    const list<Producto>& getProductos() const 
+    {
         return productosEnPedido;
     }
 };
 
-class Factura {
+class Factura 
+{
 private:
     string nombreCliente;
     Pedido pedido;
@@ -142,7 +169,8 @@ public:
     Factura(const string& _nombreCliente, const Pedido& _pedido)
         : nombreCliente(_nombreCliente), pedido(_pedido) {}
 
-    void mostrarFactura() const {
+    void mostrarFactura() const 
+    {
         cout << "\n---- Factura de Cliente: " << nombreCliente << " ----" << endl;
         pedido.mostrarPedido();
         cout << "------------------------" << endl;
@@ -150,13 +178,15 @@ public:
 };
 
 
-int main() {
+int main() 
+{
     string nombreCliente;
     Inventario inventario;
     Pedido pedido;
     int opcion;
 
-    list<string> menuPrincipal = {
+    list<string> menuPrincipal = 
+    {
         "1. Agregar Producto.",
         "2. Mostrar Reporte General.",
         "3. Realizar pedido.",
@@ -171,85 +201,102 @@ int main() {
     do {
         cout << "\nMENÚ PRINCIPAL" << endl;
 
-        for (const string &opcionMenu : menuPrincipal) {
+        for (const string &opcionMenu : menuPrincipal) 
+        {
             cout << opcionMenu << endl;
         }
 
         cout << "Seleccione una opción: ";
         cin >> opcion;
 
-        switch (opcion) {
-        case 1: {
-            string nombre;
-            float precio;
-            int cantidad, cantidadAgregar;
-
-            cout << "Cuantos productos va a agregar?: ";
-            cin >> cantidadAgregar;
-
-            for (int i = 0; i < cantidadAgregar; i++) {
-                cout << "Ingrese el nombre del producto: ";
-                cin >> nombre;
-                cout << "Ingrese el precio del producto: ";
-                cin >> precio;
-                cout << "Ingrese la cantidad del producto: ";
-                cin >> cantidad;
-                inventario.agregarProducto(Producto(nombre, precio, cantidad));
+        switch (opcion) 
+        {
+            case 1: 
+            {
+                string nombre;
+                float precio;
+                int cantidad, cantidadAgregar;
+    
+                cout << "\nCuantos productos va a agregar?: ";
+                cin >> cantidadAgregar;
+    
+                for (int i = 0; i < cantidadAgregar; i++)
+                {
+                    cout << "Ingrese el nombre del producto N°" << i+1 << ": ";
+                    cin >> nombre;
+                    cout << "Ingrese el precio del producto N°" << i+1 << ": ";
+                    cin >> precio;
+                    cout << "Ingrese la cantidad del producto N°" << i+1 << ": ";
+                    cin >> cantidad;
+                    inventario.agregarProducto(Producto(nombre, precio, cantidad));
+                }
+                break;
             }
-            break;
-        }
-
-        case 2: {
-            inventario.mostrarProductoDisponible();
-            inventario.mostrarProductoNoDisponible();
-            break;
-        }
-
-        case 3: {
-            Pedido pedido;
-            string nombreProducto;
-            int cantidad;
-
-            char continuar;
-            
-            do {
-                cout << "Ingrese el nombre del producto: ";
-                cin >> nombreProducto;
-                cout << "Ingrese la cantidad: ";
-                cin >> cantidad;
-
-                Producto* producto = inventario.buscarProducto(nombreProducto);
-                pedido.agregarAlPedido(producto, cantidad);
-
-                cout << "¿Desea agregar otro producto? (s/n): ";
-                cin >> continuar;
-
-            } while (continuar == 's' || continuar == 'S');
-            
-            break;
-        }
-
-
-        case 4: {
-            Factura factura(nombreCliente, pedido);
-            factura.mostrarFactura();
-            break;
-        }
-
-        case 5: {
-            cout << "Saliendo del programa..." << endl;
-            break;
-        }
-
-        default:    {
-            cout << "Opción no válida. Intente de nuevo." << endl;
-            break;
+    
+            case 2: 
+            {
+                cout << endl;
+                inventario.mostrarProductoDisponible();
+                cout << endl;
+                inventario.mostrarProductoNoDisponible();
+                cout << endl;
+                break;
             }
+    
+            case 3: 
+            {
+                string nombreProducto;
+                int cantidad;
+    
+                char continuar;
+                
+                do 
+                {
+                    cout << "Ingrese el nombre del producto: ";
+                    cin >> nombreProducto;
+                    cout << "Ingrese la cantidad: ";
+                    cin >> cantidad;
+    
+                    Producto* producto = inventario.buscarProducto(nombreProducto);
+                    pedido.agregarAlPedido(producto, cantidad);
+    
+                    cout << "¿Desea agregar otro producto? (s/n): ";
+                    cin >> continuar;
+                    cout << endl;
+    
+                } while (continuar == 's' || continuar == 'S');
+                
+                break;
+            }
+    
+    
+            case 4: 
+            {
+                if (!pedido.getProductos().empty()) 
+                {
+                    Factura factura(nombreCliente, pedido);
+                    factura.mostrarFactura();
+                } 
+                else 
+                {
+                    cout << "No hay productos en el pedido para facturar." << endl;
+                }
+                break;
+            }
+    
+            case 5: 
+            {
+                cout << "Saliendo del programa..." << endl;
+                break;
+            }
+    
+            default:    
+            {
+                cout << "Opción no válida. Intente de nuevo." << endl;
+                break;
+                }
         }
     } while (opcion != 5);
 
     return 0;
 }
-
-
-
