@@ -1,1 +1,135 @@
-xd
+#include <iostream>
+#include <list>
+using namespace std;
+
+class Avion {
+private:
+    string modelo;
+    float capacidadCombustible;
+    float consumoPorHora;
+    string estado;
+
+public:
+    Avion() : modelo(""), capacidadCombustible(0), consumoPorHora(0), estado("") {}
+
+    Avion(string _modelo, float _capacidadCombustible, float _consumoPorHora, string _estado) {
+        modelo = _modelo;
+        capacidadCombustible = _capacidadCombustible;
+        consumoPorHora = _consumoPorHora;
+        estado = _estado;
+    }
+
+    void mostrarDetalles() const {
+        cout << "\n----Ficha del avion----\n"
+             << "Modelo: " << modelo << "\n"
+             << "Capacidad de combustible: " << capacidadCombustible << "\n"
+             << "Consumo por hora: " << consumoPorHora << "\n"
+             << "Estado: " << estado << endl;
+    }
+
+    void verificarCombustible(float duracion) const {
+        if (duracion * consumoPorHora <= capacidadCombustible) {
+            cout << "Mision realizada con EXITO" << endl;
+        } else {
+            cout << "Mision FALLIDA" << endl;
+        }
+    }
+
+    void cargarCombustible(float cantidad) {
+        capacidadCombustible += cantidad;
+        cout << "Nuevo nivel de combustible: " << capacidadCombustible << " litros" << endl;
+    }
+};
+
+class Mision {
+private:
+    string destino;
+    float duracion;
+    int tripulacion;
+    Avion avion;
+
+public:
+    Mision() : destino(""), duracion(0), tripulacion(0), avion() {}
+
+    Mision(string _destino, float _duracion, int _tripulacion, const Avion &_avion)
+        : destino(_destino), duracion(_duracion), tripulacion(_tripulacion), avion(_avion) {}
+
+    void mostrarMision() const {
+        cout << "Destino: " << destino << ", Duración: " << duracion << " horas" << endl;
+        avion.mostrarDetalles();
+        avion.verificarCombustible(duracion);
+    }
+};
+
+int main() {
+    string nombreAvion, estado, destino;
+    float capacidadCombustible, consumoHora, duracion;
+    int tripulacion, opcionMenu, cantidadAgregar;
+
+    Avion miAvion;    // Se crea un avión predeterminado
+    Mision miMision;  // Se crea una misión vacía
+
+    list<string> menuPrincipal = {
+        "1. Agregar nuevo avion",
+        "2. Agregar mision",
+        "3. Detalles de mision",
+        "4. Salir"};
+
+    do {
+        cout << "\nMenú principal" << endl;
+        for (const string &opcion : menuPrincipal) {
+            cout << opcion << endl;
+        }
+        cout << "Seleccione una opción: ";
+        cin >> opcionMenu;
+
+        switch (opcionMenu) {
+            case 1: {
+                cout << "Cuantos aviones va a agregar?: ";
+                cin >> cantidadAgregar;
+                for (int i = 0; i < cantidadAgregar; i++) {
+                    cout << "Ingrese modelo de avión: ";
+                    cin >> nombreAvion;
+                    cout << "Capacidad de combustible: ";
+                    cin >> capacidadCombustible;
+                    cout << "Consumo por hora: ";
+                    cin >> consumoHora;
+                    cout << "Estado del avión: ";
+                    cin >> estado;
+                    miAvion = Avion(nombreAvion, capacidadCombustible, consumoHora, estado);
+                    cout << "Avión agregado con éxito." << endl;
+                }
+                break;
+            }
+
+            case 2: {
+                cout << "\nIngrese destino de la misión: ";
+                cin >> destino;
+                cout << "Duración de la misión (horas): ";
+                cin >> duracion;
+                cout << "Número de tripulantes: ";
+                cin >> tripulacion;
+                miMision = Mision(destino, duracion, tripulacion, miAvion);
+                cout << "Misión creada con éxito." << endl;
+                break;
+            }
+
+            case 3: {
+                cout << "\nDetalles de la misión:" << endl;
+                miMision.mostrarMision();
+                break;
+            }
+
+            case 4: {
+                cout << "Saliendo del Sistema..." << endl;
+                break;
+            }
+
+            default: {
+                cout << "Opción no válida." << endl;
+            }
+        }
+    } while (opcionMenu != 4);
+
+    return 0;
+}
