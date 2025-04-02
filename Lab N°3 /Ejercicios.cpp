@@ -87,11 +87,25 @@ class Archivo : public IArchivo
 {
     private:
         string nombreArchivo;
+        string estado;  // "compartido" o "reservado"
+    
     public:
-        Archivo(const string& nombre) : nombreArchivo(nombre) {}
+        Archivo(const string& nombre, const string& estado) 
+            : nombreArchivo(nombre), estado(estado) {}
+        
         void mostrarArchivo() const override 
         {
-            cout << "Archivo: " << nombreArchivo << endl;
+            cout << "Archivo: " << nombreArchivo << " - Estado: " << estado << endl;
+        }
+        
+        string getEstado() const 
+        {
+            return estado;
+        }
+        
+        string getNombre() const
+        {
+            return nombreArchivo;
         }
 };
 
@@ -210,6 +224,52 @@ class GestorComentarios
         }
     };
 
+class GestorArchivos 
+{
+    private:
+        vector<Archivo*> archivos;
+    
+    public:
+        ~GestorArchivos() 
+        {
+            for (auto archivo : archivos)
+            {
+                delete archivo;
+            }
+        }
+        
+        void agregarArchivo(const string& nombre, const string& estado) 
+        {
+            archivos.push_back(new Archivo(nombre, estado));
+        }
+        
+        const vector<Archivo*>& obtenerArchivos() const 
+        {
+            return archivos;
+        }
+};
+
+class VerifArchivo 
+{
+    private:
+        const GestorArchivos& gestorArchivos;
+    
+    public:
+        VerifArchivo(const GestorArchivos& gestor) : gestorArchivos(gestor) {}
+
+        bool existeArchivo(const string& nombre) const 
+        {
+            for (const auto& archivo : gestorArchivos.obtenerArchivos()) 
+            {
+                if (archivo->getNombre() == nombre) 
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+};
+
 class VistaTareas 
 {
     public:
@@ -276,11 +336,57 @@ class VistaComentarios
         }
 };
 
+class VistaArchivos
+{
+    public:
+        static void mostrarArchivos(const GestorArchivos& gestor) 
+        {
+            const vector<Archivo*>& archivos = gestor.obtenerArchivos();
+            bool encontrado = false;
+            if (archivos.empty()) 
+            {
+                cout << "No hay archivos registrados." << endl;
+                return;
+            }
+            
+            cout << "\nLista de archivos compartidos" << endl;
+            cout << "------------------------" << endl;
+            for (const auto& archivo : archivos) 
+            {
+                if (archivo->getEstado() == "compartido")  // Filtra los archivos compartidos
+                {
+                    archivo->mostrarArchivo();
+                    cout << "------------------------" << endl;
+                    encontrado = true;
+                }
+            }
+            
+            cout << endl;
+                        cout << "\nLista de archivos reservados" << endl;
+            cout << "------------------------" << endl;
+            for (const auto& archivo : archivos) 
+            {
+                if (archivo->getEstado() == "reservado")  // Filtra los archivos compartidos
+                {
+                    archivo->mostrarArchivo();
+                    cout << "------------------------" << endl;
+                    encontrado = true;
+                }
+            }
+
+            if (!encontrado) 
+            {
+                cout << "No hay archivos compartidos." << endl;
+            }
+        }
+};
+
 int main() 
 {
     GestorTareas gestorTareas;
     GestorProyectos gestorProyectos;
     GestorComentarios gestorComentarios;
+    GestorArchivos gestorArchivos;
     
     int opcionMenu;
     vector<string> lista = 
@@ -291,8 +397,11 @@ int main()
         "4. Mostrar proyectos",
         "5. Agregar comentario",
         "6. Mostrar comentarios",
-        "7. Salir"
+        "7. Establecer estado",          
+        "8. Mostrar archivos",
+        "9. Salir"
     };
+    
     do 
     {
         cout << "\nMenú de Opciones:" << endl;
@@ -310,7 +419,7 @@ int main()
             case 1: 
             {
                 string descripcion;
-                cout << "Ingrese la descripción de la tarea: ";
+                cout << "Ingrese el nombre de la tarea: ";
                 getline(cin, descripcion);
                 gestorTareas.agregarTarea(descripcion);
                 cout << "Tarea agregada con éxito." << endl << endl;
@@ -343,7 +452,7 @@ int main()
             {
                 string tipo;
                 int opcionTipo;
-                cout << "Seleccione el tipo de comentario" << endl;
+                cout << "Seleccione el tipo de archivo a comentar" << endl;
                 cout << "(1 = Tarea, 2 = Proyecto): ";
                 cin >> opcionTipo;
                 
@@ -359,7 +468,7 @@ int main()
                 }
                 
                 string nombre;
-                cout << "Ingrese el nombre de la " << tipo << ": ";
+                cout << "Ingrese el nombre de " << tipo << ": ";
                 getline(cin, nombre);
                 
                 VerifTarea verificadorTarea(gestorTareas);
@@ -389,6 +498,60 @@ int main()
             
             case 7: 
             {
+                string tipo;
+                int opcionTipo;
+                cout << "Seleccione el tipo de Archivo a establecer" << endl;
+                cout << "(1 = Tarea, 2 = Proyecto): ";
+                cin >> opcionTipo;
+                
+                cin.ignore();
+                if (opcionTipo == 1)
+                    tipo = "Tarea";
+                else if (opcionTipo == 2)
+                    tipo = "Proyecto";
+                else 
+                {
+                    cout << "Tipo inválido." << endl;
+                    break;
+                }
+                
+                string nombre;
+                cout << "Ingrese el nombre de " << tipo << ": ";
+                getline(cin, nombre);
+                
+                VerifTarea verificadorTarea(gestorTareas);
+                VerifProyecto verificadorProyecto(gestorProyectos);
+            
+                if ((tipo == "Tarea" && !verificadorTarea.existeTarea(nombre)) ||
+                    (tipo == "Proyecto" && !verificadorProyecto.existeProyecto(nombre))) 
+                {
+                    cout << "Error: No existe " << tipo << " con ese nombre." << endl;
+                    break;
+                }
+                
+                string estado;
+                cout << "Ingrese el estado del archivo"<< endl <<"(reservado/compartido): ";
+                getline(cin, estado);
+                
+                if ((estado != "reservado") && (estado != "compartido")) 
+                {
+                    cout << "Error: Estado no válido." << endl;
+                    break;
+                }
+                gestorArchivos.agregarArchivo(nombre, estado);
+                
+                cout << "Estado determinado con éxito." << endl;
+                break;
+            }
+            
+            case 8: 
+            {
+                VistaArchivos::mostrarArchivos(gestorArchivos);
+                break;
+            }
+            
+            case 9: 
+            {
                 cout << "Saliendo del menú..." << endl;
                 break;
             }
@@ -399,7 +562,7 @@ int main()
                 break;
             }
         }
-    } while (opcionMenu != 7);
+    } while (opcionMenu != 9);
 
     return 0;
 }
