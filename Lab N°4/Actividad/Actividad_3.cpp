@@ -80,7 +80,9 @@ class Asociacion
 };
 
 // Función para liberar memoria de los objetos
-void liberarMemoria(vector<Estudiante*>& estudiantes, vector<Docente*>& docentes, vector<Curso*>& cursos, vector<Asociacion*>& asociaciones) 
+void liberarMemoria(vector<Estudiante*>& estudiantes, 
+vector<Docente*>& docentes, vector<Curso*>& cursos, 
+vector<Asociacion*>& asociaciones) 
 {
     for (auto est : estudiantes) delete est;
     for (auto doc : docentes) delete doc;
