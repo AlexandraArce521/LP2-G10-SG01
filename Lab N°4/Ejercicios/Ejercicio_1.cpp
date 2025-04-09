@@ -7,6 +7,7 @@ using namespace std;
 class Autor;
 class Libro;
 class Prestamo;
+class Fecha;
 
 class Autor {
 private:
@@ -14,9 +15,9 @@ private:
     vector<Libro*> libros;
 
 public:
-    Autor(string nombre, string nacionalidad) 
+    Autor(string nombre, string nacionalidad)
     : nombre(nombre), nacionalidad(nacionalidad) {}
-    
+
     string getNombre() const {
         return nombre;
     }
@@ -25,7 +26,7 @@ public:
 };
 
 class Libro {
-private:    
+private:
     int ISBN;
     string titulo;
     int anioPublic;
@@ -33,7 +34,7 @@ private:
     vector<Autor*> autores;
 
 public:
-    Libro(string titulo, int anioPublic, int cantEjempleares, int ISBN) 
+    Libro(string titulo, int anioPublic, int cantEjempleares, int ISBN)
     : titulo(titulo), anioPublic(anioPublic), cantEjempleares(cantEjempleares), ISBN(ISBN) {}
 
     string getTitulo() {
@@ -47,7 +48,7 @@ public:
     int getAnioPublic() {
         return anioPublic;
     }
-    
+
     int getISBN() {
         return ISBN;
     }
@@ -112,11 +113,13 @@ public:
     }
 };
 
-struct Fecha {
+class Fecha {
+private:
     int dia;
     int mes;
     int anio;
 
+public:
     void ingresarFecha(const string& tipo) {
         cout << "Ingrese la fecha de " << tipo << " (DD MM AAAA): ";
         cin >> dia >> mes >> anio;
@@ -131,23 +134,23 @@ class Prestamo {
 private:
     Usuario* usuario;
     Libro* libro;
-    string fechaPrestamo;
-    string fechaDevolucion;
+    Fecha fechaPrestamo;
+    Fecha fechaDevolucion;
+
 public:
-    Prestamo(Usuario* usuario, Libro* libro, string fechaPrestamo, string fechaDevolucion)
+    Prestamo(Usuario* usuario, Libro* libro, Fecha fechaPrestamo, Fecha fechaDevolucion)
     : usuario(usuario), libro(libro), fechaPrestamo(fechaPrestamo), fechaDevolucion(fechaDevolucion) {}
-    
+
     void mostrarDetalle() {
         cout << "Prestamo de: " << libro->getTitulo() << endl;
         cout << "Usuario: " << usuario->getNombre() << endl;
-        cout << "Fecha de Prestamo: " << fechaPrestamo << endl;
-        cout << "Fecha de Devolucion: " << fechaDevolucion << endl;
+        cout << "Fecha de Prestamo: "; fechaPrestamo.mostrarFecha();
+        cout << "Fecha de Devolucion: "; fechaDevolucion.mostrarFecha();
     }
 };
 
 int main() {
-    vector <string> menuPrincipal 
-    = {
+    vector<string> menuPrincipal = {
         "1. Registrar Usuario",
         "2. Agregar libro a biblioteca",
         "3. Prestar Libro a Usuario",
@@ -155,29 +158,26 @@ int main() {
         "5. Mostrar Libros en la biblioteca",
         "6. Salir"
     };
-    
+
     int opcion;
     string nombreUsuario, direccionUsuario, tituloLibro, autor;
     int telefonoUsuario, ISBN, anioPublic, ejemplares;
     string fechaPrestamo, fechaDevolucion;
     Usuario* usuario = nullptr;
     vector<Libro*> biblioteca;  // Vector para almacenar los libros de la biblioteca
-    
-    do  {
+
+    do {
         cout << "\nBienvenido al menú principal!" << endl;
-        
-        for (const string& opcionMenu : menuPrincipal)  
-        {
+
+        for (const string& opcionMenu : menuPrincipal) {
             cout << opcionMenu << endl;
         }
-        
+
         cout << "Seleccione una opción: ";
         cin >> opcion;
-        
-        switch (opcion)
-        {
-            case 1: 
-            {
+
+        switch (opcion) {
+            case 1: {
                 cout << "Agregar nuevo Usuario." << endl;
                 cout << "\nIngrese su nombre: ";
                 cin >> nombreUsuario;
@@ -189,43 +189,45 @@ int main() {
                 break;
             }
 
-            case 2:
-            {
+            case 2: {
                 cout << "Ingrese el titulo del libro: ";
                 cin.ignore();
                 getline(cin, tituloLibro);
-                
+
                 cout << "Ingrese el ISBN del libro: ";
                 cin >> ISBN;
-                
+
                 cout << "Ingrese el año de publicación: ";
                 cin >> anioPublic;
-                
+
                 cout << "Ingrese la cantidad de ejemplares del libro: ";
                 cin >> ejemplares;
-                
+
                 cout << "Ingrese el nombre del autor: ";
                 cin.ignore();
                 getline(cin, autor);
-                
+
+                // Crear autor y libro
+                Autor* nuevoAutor = new Autor(autor, "Desconocida"); // Cambiar si tienes más datos del autor
                 Libro* libro = new Libro(tituloLibro, anioPublic, ejemplares, ISBN);
+                libro->agregarAutor(nuevoAutor);
                 biblioteca.push_back(libro);  // Agregar libro a la biblioteca
+                nuevoAutor->agregarLibro(libro); // Asocia el libro con el autor
                 break;
             }
-            
-           case 3:
-            {
+
+            case 3: {
                 cout << "Prestar Libro\nIngrese el nombre del usuario: ";
                 cin.ignore();
                 getline(cin, nombreUsuario);
-                
+
                 cout << "Ingrese el titulo del libro: ";
                 getline(cin, tituloLibro);
-                
+
                 cout << "Ingrese la cantidad de ejemplares a prestar: ";
                 int cantidad;
-                cin >> cantidad;  
-                
+                cin >> cantidad;
+
                 Libro* libro = nullptr;
                 for (Libro* l : biblioteca) {
                     if (l->getTitulo() == tituloLibro) {
@@ -233,25 +235,26 @@ int main() {
                         break;
                     }
                 }
-                
+
                 if (libro && libro->getCantidadEjemplares() >= cantidad) {
                     libro->prestarLibro(cantidad);
                     usuario->prestarLibro(libro, cantidad);
                 } else {
                     cout << "No hay suficientes ejemplares disponibles para este libro." << endl;
+                    break;
                 }
-                
-                cout << "Ingrese la fecha de prestamo (DD MM AAAA): ";
-                cin >> fechaPrestamo;
-                cout << "Ingrese la fecha de devolución (DD MM AAAA): ";
-                cin >> fechaDevolucion;
-                
-                Prestamo prestamo(usuario, libro, fechaPrestamo, fechaDevolucion);
+
+                // Usando la clase Fecha para las fechas
+                Fecha fechaP, fechaD;
+                fechaP.ingresarFecha("prestamo");
+                fechaD.ingresarFecha("devolucion");
+
+                Prestamo prestamo(usuario, libro, fechaP, fechaD);
                 prestamo.mostrarDetalle();
                 break;
             }
-            case 4: 
-            {
+
+            case 4: {
                 if (usuario != nullptr) {
                     usuario->mostrarLibrosPrestados();
                 } else {
@@ -259,21 +262,20 @@ int main() {
                 }
                 break;
             }
-            case 5: 
-            {
-                cout << "---LISTA DE LIBROS EN LA BIBLIOTECA---" << endl;
+
+            case 5: {
                 for (Libro* libro : biblioteca) {
                     libro->mostrarLibro();
                 }
                 break;
             }
-            case 6:
-            {
+
+            case 6: {
                 cout << "Saliendo del Sistema..." << endl;
                 break;
             }
         }
     } while (opcion != 6);
-    
+
     return 0;
 }
