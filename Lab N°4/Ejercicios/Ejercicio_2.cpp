@@ -94,7 +94,7 @@ class Pago
     
         void mostrarPago() const 
         {
-            cout << "Pago realizado por: " << cliente->getNombre() << endl;
+            cout << "\nPago realizado por: " << cliente->getNombre() << endl;
             cout << "Monto: $" << monto << endl;
             cout << "Metodo de pago: " << metodoPago << endl;
             cout << "Fecha de pago: " << fechaPago << endl;
@@ -120,8 +120,8 @@ class Venta
     
         void mostrarDetalle() const 
         {
-            cout << "--- Detalles de la Venta ---" << endl;
-            cout << "Factura N°: " << numeroFactura << endl;
+            cout << "\n--- Detalles de la Venta ---" << endl;
+            cout << "\nFactura N°: " << numeroFactura << endl;
             cout << "Fecha: " << fecha << endl;
             cout << "Cliente: " << cliente->getNombre() << endl;
             cout << "Productos vendidos: " << endl;
@@ -131,7 +131,7 @@ class Venta
                 producto->mostrarProducto();
                 total += producto->getPrecio();
             }
-            cout << "Total de la venta: $" << total << endl;
+            cout << "\nTotal de la venta: $" << total << endl;
         }
     
         double calcularTotal() const 
@@ -148,7 +148,7 @@ class Venta
 // Definición completa de la función mostrarCompras de Cliente
 void Cliente::mostrarCompras() const 
 {
-    cout << "Compras realizadas por " << nombre << endl;
+    cout << "\nCompras realizadas por " << nombre << endl;
     for (Venta* venta : ventasRealizadas) 
     {
         venta->mostrarDetalle();
@@ -186,14 +186,14 @@ int main() {
             cout << opcionMenu << endl;
         }
         
-        cout << "Seleccione una opción: ";
+        cout << "\nSeleccione una opción: ";
         cin >> opcion;
 
         switch (opcion) 
         {
             case 1: 
             {
-                cout << "Registrar nuevo Cliente." << endl;
+                cout << "\nRegistrar nuevo Cliente." << endl;
                 cout << "Ingrese su nombre: ";
                 cin.ignore();
                 getline(cin, nombreCliente);
@@ -208,7 +208,7 @@ int main() {
 
             case 2:
             {
-                cout << "Agregar nuevo Producto." << endl;
+                cout << "\nAgregar nuevo Producto." << endl;
                 cout << "Ingrese el código del producto: ";
                 cin >> codigoProducto;
                 cout << "Ingrese el nombre del producto: "; 
@@ -228,7 +228,7 @@ int main() {
 
             case 3: 
             {
-                cout << "Realizar Venta." << endl;
+                cout << "\nRealizar Venta." << endl;
                 cout << "Ingrese el número de factura: ";
                 cin >> numeroFactura;
                 cout << "Ingrese la fecha de la venta (DD/MM/YYYY): ";
@@ -251,7 +251,7 @@ int main() {
                 venta = new Venta(numeroFactura, fechaVenta, cliente);
                 
                 int cantidadProductos;
-                cout << "¿Cuántos productos desea agregar a la venta? ";
+                cout << "\n¿Cuántos productos desea agregar a la venta? ";
                 cin >> cantidadProductos;
                 for (int i = 0; i < cantidadProductos; i++) 
                 {
@@ -275,7 +275,7 @@ int main() {
 
             case 4: 
             {
-                cout << "Mostrar Compras de Cliente." << endl;
+                cout << "\nMostrar Compras de Cliente." << endl;
                 cout << "Ingrese el nombre del cliente: ";
                 string nombreCliente;
                 cin.ignore();
@@ -293,7 +293,7 @@ int main() {
 
             case 5: 
             {
-                cout << "Registrar Pago." << endl;
+                cout << "\nRegistrar Pago." << endl;
                 cout << "Ingrese el nombre del cliente: ";
                 string clienteNombre;
                 cin.ignore();
