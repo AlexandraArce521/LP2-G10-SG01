@@ -1,0 +1,66 @@
+#include <iostream>
+using namespace std;
+
+class Cliente {
+private:
+    string nombre;
+    string direccion;
+
+public:
+    // Constructor with initializer list
+    Cliente(string nombre, string direccion) : nombre(nombre), direccion(direccion) {}
+
+    string getNombre() {
+        return nombre;
+    }
+
+    string getDireccion() {
+        return direccion;
+    }
+
+    void setNombre(string _nombre) {
+        nombre = _nombre;
+    }
+
+    void setDireccion(string _direccion) {
+        direccion = _direccion;
+    }
+
+    void mostrarCliente() {
+        cout << "=====Datos del cliente=====\n";
+        cout << "Nombre: " << nombre << endl;
+        cout << "Direccion: " << direccion << endl;
+    }
+};
+
+class Factura {
+private:
+    int num;
+    double monto;
+    Cliente cliente;  
+
+public:
+    Factura(int num, double monto, Cliente cliente) : num(num), monto(monto), cliente(cliente) {}
+
+    int getNum() {
+        return num;
+    }
+
+    double getMonto() {
+        return monto;
+    }
+
+    void mostrarFactura() {
+        cliente.mostrarCliente();  
+        cout << "Numero de pedido: " << num << endl;
+        cout << "Monto: " << monto << endl;
+    }
+};
+
+int main() {
+    Cliente cliente1("Jose Vargas", "Alto selva alegre");  
+    Factura factura1(123456, 290.90, cliente1);  
+    factura1.mostrarFactura();  
+    
+    return 0;
+}
