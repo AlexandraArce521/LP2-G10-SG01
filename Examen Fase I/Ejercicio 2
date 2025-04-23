@@ -1,1 +1,86 @@
-dsew
+#include <iostream>
+using namespace std;
+
+class Autor {
+private:
+    string nombre;
+    string nacionalidad;
+
+public:
+    Autor(string nombre, string nacionalidad) : 
+    nombre(nombre), nacionalidad(nacionalidad) {}
+
+    string getNombre() {
+        return nombre;
+    }
+
+    string getNacionalidad() {
+        return nacionalidad;
+    }
+
+    void setNombre(string _nombre) {
+        nombre = _nombre;
+    }
+
+    void setNacionalidad(string _nacionalidad) {
+        nacionalidad = _nacionalidad;
+    }
+
+    void mostrarAutor() {
+        cout << "Autor: " << nombre << endl;
+        cout << "Nacionalidad: " << nacionalidad << endl;
+    }
+};
+
+class Libro {
+private:
+    string titulo;
+    double precio;
+    Autor autor;
+
+public:
+    Libro(string titulo, double precio, Autor autor) : 
+    titulo(titulo), precio(precio), autor(autor) {}
+
+    string getTitulo() {
+        return titulo;
+    }
+
+    double getPrecio() {
+        return precio;
+    }
+
+    void setTitulo(string _titulo) {
+        titulo = _titulo;
+    }
+
+    void setPrecio(double _precio) {
+        precio = _precio;
+    }
+};
+
+class MostrarDatosGeneral {
+private:
+    Autor autor;
+    Libro libro;
+
+public:
+    MostrarDatosGeneral(Autor autor, Libro libro) : 
+    autor(autor), libro(libro) {}
+
+    void mostrarDatosLibro() {
+        cout << "=======DATOS DEL LIBRO=========\n";
+        autor.mostrarAutor(); 
+        cout << "Título: " << libro.getTitulo() << endl; 
+        cout << "Precio: " << libro.getPrecio() << endl; 
+    }
+};
+
+int main() {
+    Autor autor1("Vargas", "Peru");
+    Libro libro1("Tren", 23.90, autor1);
+    MostrarDatosGeneral mostrarDatos(autor1, libro1);
+    mostrarDatos.mostrarDatosLibro(); 
+    return 0;
+}
+
