@@ -7,7 +7,6 @@ private:
     string direccion;
 
 public:
-    // Constructor with initializer list
     Cliente(string nombre, string direccion) : nombre(nombre), direccion(direccion) {}
 
     string getNombre() {
