@@ -1,0 +1,51 @@
+//Incompleto
+#include <iostream>
+using namespace std;
+
+class Producto;
+class Pedido;
+
+class Producto {
+private:
+   string nombre;
+   double precio;
+
+public:
+   
+};
+
+class Pedido {
+private:
+    int codigoPedido;
+    string fecha;
+    vector <*Producto> productos;
+
+public:
+    Pedido(int codigoPedido, string fecha):
+        codigoPedido(codigoPedido), fecha(fecha) {}
+    
+    int getCodigoPedido() { 
+        return codigoPedido; }
+    string getFecha() { 
+        return fecha; }
+    
+    void setCodigoPedido(int _codigoPedido)  {
+        codigoPedido = _codigoPedido;
+    } 
+    void setFecha(string _fecha)    {
+        fecha = _fecha;
+    }
+    
+    void agregarProducto(Producto* producto);
+    
+};
+
+void Pedido::agregarProducto(Producto* producto {
+    productos.push_back(producto);    
+}
+
+int main() {
+
+    
+    return 0;
+}
