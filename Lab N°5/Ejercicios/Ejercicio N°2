@@ -39,15 +39,25 @@ public:
 
 class Direccion {
 private:
+    string direccion;
     Cliente cliente;
-   
+
+public:
+    Direccion(string direc, string nom, int d, int m, int a):
+        direccion(direc), cliente(nom, d, m, a)
+    {
+        cout << "Dirección del cliente registrada: " << direccion << endl;
+    }
 };
+
 
 int main()
 {
-
+    Cliente cliente("Juan",2,4,2001);
+    cliente.mostrarCliente();
     return 0;
 }
+
 
 
 
