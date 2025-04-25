@@ -1,1 +1,54 @@
-fsd
+#include <iostream>
+#include <string>
+using namespace std;
+class FechaRegistro {
+private:
+    int dia, mes, anio;
+
+public:
+    FechaRegistro(int d, int m, int a):
+        dia(a), mes(m), anio(a) {
+            cout << "Fecha de registro creada: ";
+            mostrarFechaRegistro();
+            cout << endl;
+        }
+    void mostrarFechaRegistro() const {
+        cout << dia << "/" << mes << "/" << anio;
+    }
+};
+
+class Cliente {
+private:
+    string nombre;
+    FechaRegistro fecha;
+
+public:
+    Cliente(string nom, int d, int m, int a):
+        nombre(nom), fecha(d,m,a) // lista de inicializacion
+    {
+        cout << "Cliente registrado: " << nombre << endl;
+    }
+    
+    void mostrarCliente() const {
+        cout << "Nombre de Cliente: " << nombre << "\nFecha de registro: ";
+        fecha.mostrarFechaRegistro();
+        cout << endl;
+    }
+    
+};
+
+class Direccion {
+private:
+    Cliente cliente;
+   
+};
+
+int main()
+{
+
+    return 0;
+}
+
+
+
+
