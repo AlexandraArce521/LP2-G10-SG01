@@ -7,8 +7,8 @@ private:
 
 public:
     FechaRegistro(int d, int m, int a):
-        dia(a), mes(m), anio(a) {
-            cout << "Fecha de registro creada: ";
+        dia(d), mes(m), anio(a) {
+            cout << "Fecha de registro creada! ";
             mostrarFechaRegistro();
             cout << endl;
         }
@@ -26,7 +26,7 @@ public:
     Cliente(string nom, int d, int m, int a):
         nombre(nom), fecha(d,m,a) // lista de inicializacion
     {
-        cout << "Cliente registrado: " << nombre << endl;
+        cout << "Cliente registrado! " << endl;
     }
     
     void mostrarCliente() const {
@@ -53,10 +53,14 @@ public:
 
 int main()
 {
-    Cliente cliente("Juan",2,4,2001);
+    Cliente cliente("Juan",11,12,2005);
     cliente.mostrarCliente();
     return 0;
 }
+
+
+
+
 
 
 
