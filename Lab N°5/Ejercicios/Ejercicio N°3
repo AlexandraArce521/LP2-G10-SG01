@@ -19,7 +19,6 @@ public:
     Habitacion(int num, string t, double precio)
     :numero(num), tipo(t), precioPorNoche(precio)   {
         cout << "Habitacion creada! ";
-        cout << endl;
     }
     
     int getNumero() {
@@ -55,7 +54,6 @@ public:
     
     ~Habitacion() {
         cout << "Destructor de Habitacion invocado " << endl;
-        cout << endl;
     }
 };
 
@@ -149,3 +147,5 @@ int main()
 
     return 0;
 }
+
+
