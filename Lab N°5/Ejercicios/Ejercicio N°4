@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <string>
 using namespace std;
@@ -118,7 +119,7 @@ public:
         cout << "\n===Información de empresa===\n" << endl;
         cout <<"Calle: " << direccion.getCalle() << endl;
         cout << "Numero de Edificio: " << direccion.getNumeroEdificio() << endl;
-        cout << "Ciudad: " << direccion.getCiudad << endl;
+        cout << "Ciudad: " << direccion.getCiudad() << endl;
         cout << "\n===Información de Gerente====\n" << endl;
         cout << "Nombre: " << gerente.getNombre() << endl;
         cout << "Email: " << gerente.getEmail() << endl;
