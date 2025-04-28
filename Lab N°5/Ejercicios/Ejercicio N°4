@@ -90,7 +90,7 @@ public:
         email = e;
     }
     
-    void getCargo(string c) {
+    void setCargo(string c) {
         cargo = c;
     }
     
