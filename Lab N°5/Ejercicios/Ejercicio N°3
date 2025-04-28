@@ -46,7 +46,7 @@ public:
     }
     
     void mostrarHabitacion() const {
-        cout << "\n===Habitacion===" << endl;
+        cout << "\n==== Habitacion ====" << endl;
         cout << "Numero: " << numero << endl;
         cout << "Tipo de habitacion: " << tipo << endl;
         cout << "Precio por Noche: " << precioPorNoche << endl;
@@ -92,8 +92,12 @@ public:
         cantidad = c;
     }
     
-    double TotalPorNoche(int cantidad, double precioPorNoche) {
-        return cantidad*precioPorNoche;
+    double TotalPorNoche() {
+        double total = 0;
+        for (int i = 0; i < cantidad; ++i) {
+            total += habitaciones[i].getPrecio();
+        }
+        return total;
     }
 
     void asignarHabitacion(int indice, int num, string tipo, double precio) {
@@ -106,15 +110,18 @@ public:
 
 
     void mostrarReserva() const {
-        cout << "\n-Detalles de la reserva-\n";
+        cout << "\n---- Detalles de la reserva ----\n"<<endl;
+        cout << "Nombre de la reserva: " << nombre << endl;
+        cout << "Cantidad de habitaciones: " << cantidad << endl;
         for (int i = 0; i < cantidad; ++i) {
             habitaciones[i].mostrarHabitacion();
         }
     }
     
     ~ReservaHotel() {
-        cout << "Destructor invocado para Reserva de " << nombre << endl;
-    }
+    delete[] habitaciones; // liberar memoria
+    cout << "Destructor invocado para Reserva de " << nombre << endl;
+}
    
 };
 
@@ -126,26 +133,34 @@ int main()
 //_____________________________________________________
 
     reserva1.asignarHabitacion(0, 101, "Simple", 150.0);
+    
+    cout<<endl<< "____________ RESERVA 1 ____________"<<endl;
     reserva1.mostrarReserva();  
-    cout << "Precio total por noche: " 
-         << reserva1.TotalPorNoche(1, 150.0) << endl;
-    cout << "===============" << endl;
+    cout << "\nPrecio total por noche: " 
+         << reserva1.TotalPorNoche() << endl;
+    cout << "====================================" << endl;
+    cout << "____________________________________\n" << endl;
 //_____________________________________________________
 
     reserva2.asignarHabitacion(0, 102, "Doble", 250.0);
+    
+    cout<<endl<< "____________ RESERVA 2 ____________"<<endl;
     reserva2.mostrarReserva();  
-    cout << "Precio total por noche: " 
-         << reserva2.TotalPorNoche(1, 250.0) << endl;
-    cout << "===============" << endl;
+    cout << "\nPrecio total por noche: " 
+         << reserva2.TotalPorNoche() << endl;
+    cout << "====================================" << endl;
+    cout << "____________________________________\n" << endl;
 //_____________________________________________________
     
     reserva2.asignarHabitacion(1, 103, "Simple", 150.0);
+    
+    cout<<endl<< "____________ RESERVA 2 ____________"<<endl;
+    cout<<endl<< "____________ completada ____________"<<endl;
     reserva2.mostrarReserva();  
-    cout << "Precio total por noche: " 
-         << reserva2.TotalPorNoche(1, 150.0) << endl;
-    cout << "===============" << endl;
+    cout << "\nPrecio total por noche: " 
+         << reserva2.TotalPorNoche() << endl;
+    cout << "====================================" << endl;
+    cout << "____________________________________\n" << endl;
 
     return 0;
 }
-
-
