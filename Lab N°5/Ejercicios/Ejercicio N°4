@@ -135,7 +135,8 @@ public:
 
 int main()
 {
-    Empresa empresa("Calle San Jeronimo",
+    Empresa empresa;
+    empresa = Empresa("Calle San Jeronimo",
                     "A-128","Arequipa",
                     "Juan Carlos de las Vegas",
                     "Juan@Vegas.com",
