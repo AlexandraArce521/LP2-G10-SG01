@@ -1,1 +1,22 @@
-das
+#include <iostream>
+#include <string>
+#include <vector>
+namespace using std;
+
+class Estudiante {
+private:
+    string nombre;
+    int dni;
+    vector <double> notas;
+
+public:
+
+    
+}; 
+
+int main()
+{
+    std::cout<<"Hello World";
+
+    return 0;
+}
