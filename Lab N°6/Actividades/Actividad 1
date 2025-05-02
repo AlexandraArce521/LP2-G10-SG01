@@ -1,22 +1,55 @@
 #include <iostream>
 #include <string>
 #include <vector>
-namespace using std;
+#include <algorithm>
+using namespace  std;
 
 class Estudiante {
 private:
     string nombre;
-    int dni;
+    string dni;
     vector <double> notas;
 
 public:
-
+    Estudiante (string n, string d, vector <double> nNotas)
+        : nombre(n), dni(d), notas(nNotas) {}
     
+    
+    void mostrarDatos() {
+        cout << "==Mostrar datos de Estudiante=="<< endl;
+        cout << "Nombre: " << nombre
+             << "\nDNI: " << dni << endl;
+             
+        cout << "Notas: " << endl;
+        sort(notas.begin(), notas.end(), greater<double>());
+         
+        for (size_t i = 0; i < notas.size(); ++i) {
+            cout << i+1 << ". " <<notas[i] << endl;
+        }
+    cout << "====" << endl;
+    }
+    
+        
+    ~Estudiante() {
+        cout << endl;
+    }
 }; 
 
 int main()
 {
-    std::cout<<"Hello World";
+    vector<double> notas1 = {12.7, 18.9, 15.4};
+
+    Estudiante estudiante1("Juan", "013173331", notas1);
+
+    estudiante1.mostrarDatos();
+    
+//=========================================
+
+    vector<double> notas2 = {10.8, 11.9, 12.4};
+
+    Estudiante estudiante2("Carlos", "0158756", notas2);
+
+    estudiante2.mostrarDatos();
 
     return 0;
 }
