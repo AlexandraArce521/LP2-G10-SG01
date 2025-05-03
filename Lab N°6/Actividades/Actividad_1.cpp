@@ -27,20 +27,18 @@ public:
     }
     
     void mostrarDatos() {
-        cout << "==Mostrar datos de Estudiante=="<< endl;
+        cout << "== Mostrar datos de Estudiante ==\n"<< endl;
         cout << "Nombre: " << nombre
              << "\nDNI: " << dni << endl;
              
-        cout << "Notas: " << endl;
-        promedioNotas();
-
         sort(notas.begin(), notas.end(), greater<double>());
-         
+        cout <<"Sus Notas son\n";
         for (size_t i = 0; i < notas.size(); ++i) {
             cout << i+1 << ". " <<notas[i] << endl;
         }
         
-    cout << "====\n" << endl;
+        promedioNotas();
+    cout << "\n===================================\n" << endl;
     }
     
         
