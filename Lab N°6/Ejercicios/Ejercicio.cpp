@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 class Alumno {
@@ -20,6 +21,14 @@ public:
         cout << "Promedio: " << promedio << endl;
         cout << endl;
     }
+    double getPromedio() const {
+        return promedio;
+    }
+    
+    bool operator < (const Alumno& otro) const {
+        return promedio < otro.promedio;
+    }    
+
     
 };
 
@@ -29,24 +38,63 @@ private:
     int cantidad;
 
 public:
-    Grupo(vector<Alumno>& a, int c)
-        : alumnos(a), cantidad(c) {}
+    Grupo(int c)
+        :cantidad(c) {
+            alumnos.reserve(cantidad);
+        }
 
     void mostrarAlumnos() {
+     cout << "==Grupo de Alumnos==" << endl;
         for (const Alumno& a : alumnos)  {
             a.mostrar();  
         }
     }
+
+    void agregarAlumno(const string& nombre, int edad, float promedio) {
+        if (alumnos.size() < cantidad) {
+            alumnos.push_back(Alumno(nombre, edad, promedio));
+        } else {
+            cout << "El grupo ya está lleno." << endl;
+        }
+    }
+   void ordenarAlumnos() {
+        sort(alumnos.begin(), alumnos.end());
+    }
+
+    float calcularPromedio() const {
+        float suma = 0.0;
+        for (const Alumno& a : alumnos) {
+            suma += a.getPromedio();
+        }
+        return suma / alumnos.size();
+    }
+
+    Alumno obtenerMejorPromedio() const {
+        Alumno mejor = alumnos[0];
+        for (const Alumno& a : alumnos) {
+            if (a.getPromedio() > mejor.getPromedio()) {
+                mejor = a;
+            }
+        }
+        return mejor;
+    }
+
 };
 
 int main()
 {
-    vector<Alumno> lista;
-    lista.push_back(Alumno("Carlos", 20, 15.3));
-    lista.push_back(Alumno("Lucía", 22, 18.7));
+    Grupo grupo(5);
+    
+    grupo.agregarAlumno("Carlos", 20, 15.3);
+    grupo.agregarAlumno("Lucia", 22, 18.7);
+    grupo.agregarAlumno("Jose", 21, 17.5);
+    grupo.agregarAlumno("Ana", 19, 16.8);
+    grupo.agregarAlumno("Miguel", 23, 14.9);
 
-    Grupo grupo(lista, lista.size());
     grupo.mostrarAlumnos();
+    
+    float promedio = grupo.calcularPromedio();
+    cout << "Promedio de los promedios: " << promedio << endl;
 
     return 0;
 }
