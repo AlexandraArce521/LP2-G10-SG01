@@ -26,7 +26,17 @@ public:
     }
     
     bool operator < (const Alumno& otro) const {
-        return promedio < otro.promedio;
+        
+        bool resultado = promedio < otro.promedio;
+        cout << "Comparando: " << nombre << " (" << promedio << ") < "
+             << otro.nombre << " (" << otro.promedio << ") -> ";
+        if (resultado) {
+            cout << "true" << endl;
+        } else {
+            cout << "false" << endl;
+        }
+        
+        return resultado; //promedio < otro.promedio
     }    
 
     
@@ -57,8 +67,14 @@ public:
             cout << "El grupo ya está lleno." << endl;
         }
     }
-   void ordenarAlumnos() {
+    void ordenarAlumnos() {
+        cout << "\n== Comparaciones durante la ordenación ==\n";
         sort(alumnos.begin(), alumnos.end());
+    
+        cout << "\n== Alumnos ordenados por promedio (de menor a mayor) ==\n";
+        for (const Alumno& a : alumnos) {
+            a.mostrar();
+        }
     }
 
     float calcularPromedio() const {
@@ -66,18 +82,21 @@ public:
         for (const Alumno& a : alumnos) {
             suma += a.getPromedio();
         }
-        return suma / alumnos.size();
+        float promedio = suma / alumnos.size();
+        return promedio;
     }
 
-    Alumno obtenerMejorPromedio() const {
+    Alumno obtenerMejorAlumno() const {
+
         Alumno mejor = alumnos[0];
         for (const Alumno& a : alumnos) {
-            if (a.getPromedio() > mejor.getPromedio()) {
+            if (mejor < a) {
                 mejor = a;
             }
         }
         return mejor;
     }
+    
 
 };
 
@@ -92,9 +111,14 @@ int main()
     grupo.agregarAlumno("Miguel", 23, 14.9);
 
     grupo.mostrarAlumnos();
+    grupo.ordenarAlumnos();
     
     float promedio = grupo.calcularPromedio();
     cout << "Promedio de los promedios: " << promedio << endl;
+    
+    Alumno mejor = grupo.obtenerMejorAlumno();
+    cout << "\nAlumno con el mejor promedio:\n" << endl;
+    mejor.mostrar();    
 
     return 0;
 }
