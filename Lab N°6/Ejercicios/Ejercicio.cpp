@@ -21,8 +21,6 @@ public:
         cout << endl;
     }
     
-
-    
 };
 
 class Grupo {
