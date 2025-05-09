@@ -61,11 +61,11 @@ public:
     Tablet(string m, string model, string so, bool lapiz)
      : Movil(m, model, so), tieneLapiz(lapiz) {
          if(tieneLapiz) {
-             cout << marca << "tiene lapiz" << endl;
+             cout << marca << " tiene lapiz" << endl;
          }
          
          else {
-             cout << marca << "no tiene lapiz" << endl;
+             cout << marca << " no tiene lapiz" << endl;
             
          }
      }
