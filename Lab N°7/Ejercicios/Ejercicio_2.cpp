@@ -147,6 +147,7 @@ public:
          cout << "Nombre: " << nombre << endl;
          cout << "Edad: " << edad << endl;
          cout << "Salario: " << salario << endl; 
+         cout << "*Correo electrónico: *" << correo << endl;
          cout << "ID de Empleado: " << idEmpleado << endl;
          cout << "Cargo de Empleado: " << cargo << endl;
          cout << "\n============================\n" << endl;
