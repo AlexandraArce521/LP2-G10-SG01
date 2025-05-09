@@ -58,12 +58,35 @@ private:
     bool tieneLapiz;
 
 public:
+    Tablet(string m, string model, string so, bool lapiz)
+     : Movil(m, model, so), tieneLapiz(lapiz) {
+         if(tieneLapiz) {
+             cout << marca << "tiene lapiz" << endl;
+         }
+         
+         else {
+             cout << marca << "no tiene lapiz" << endl;
+            
+         }
+     }
 
+   ~Tablet() {
+        cout << "Destructor de Tablet " << endl;
+   }
     
 };
 
 int main()
 {
+    vector<string>aplicaciones = {"Facebook", "Youtube", "Instagram"};
+    
+    Telefono t1("Samsung", "Galaxy S21", "Android", aplicaciones, "Alta");
+    cout << endl;
+    Tablet tab1("Apple", "iPad Pro", "iPadOS", true);
+    cout << endl;
+    
+    return 0;
+}
 
     
     return 0;
