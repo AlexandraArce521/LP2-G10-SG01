@@ -60,7 +60,7 @@ public:
     }
 };
 
-class Cliente: protected Persona {
+class Cliente: public Persona {
 private:
     string fono;
     string id;
@@ -110,7 +110,7 @@ public:
 
 };
 
-class Empleado: protected Persona {
+class Empleado: public Persona {
 private:
     string idEmpleado;
     string cargo;
