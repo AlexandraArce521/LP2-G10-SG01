@@ -146,6 +146,5 @@ int main()
     Motocicleta moto1("Honda", "CBR500R", "2022", 7000.0, 8);
     moto1.mostrarMoto();
     
-
     return 0;
 }
