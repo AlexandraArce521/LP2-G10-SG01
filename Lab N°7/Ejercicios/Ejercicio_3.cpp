@@ -33,7 +33,7 @@ public:
 
 };
 
-class Telefono: protected Movil {
+class Telefono: public Movil {
 private:
     vector <string> aplicaciones;
     string gama;
@@ -74,7 +74,7 @@ public:
 
 };
 
-class Tablet: protected Movil {
+class Tablet: public Movil {
 private:
     bool tieneLapiz;
 
