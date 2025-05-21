@@ -39,8 +39,11 @@ int main()
     Empleado* empCompleto1 = new EmpleadoTiempoCompleto(14500);
     Empleado* empMedio1 = new EmpleadoMedioTiempo(3.4, 48);
     
-    cout << "El empleado de tiempo completo tiene un sueldo mensual de: " << empCompleto1 ->calcularSalario() << "$\n";
-    cout << "El empleado de medio tiempo tiene un sueldo mensual de: " << empMedio1 ->calcularSalario() << "$\n";
+    cout << "El empleado de tiempo completo tiene un sueldo mensual de: " 
+    << empCompleto1 ->calcularSalario() << "$\n";
+    
+    cout << "El empleado de medio tiempo tiene un sueldo mensual de: " 
+    << empMedio1 ->calcularSalario() << "$\n";
     
     delete empCompleto1;
     delete empMedio1;
