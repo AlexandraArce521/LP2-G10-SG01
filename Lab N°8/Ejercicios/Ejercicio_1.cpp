@@ -1,4 +1,3 @@
-
 #include <iostream>
 using namespace std;
 
@@ -63,13 +62,13 @@ public:
 
 int main()
 {
-    Figura* cuadrado1 = new Circulo(2);
+    Figura* circulo1 = new Circulo(2);
     Figura* rectangulo1 = new Rectangulo(5,2);    
     Figura* triangulo1 = new Triangulo(3,4);
 
     
-    cuadrado1 ->dibujar();
-    cout << "Área del cuadrado: " << cuadrado1 ->area() << endl;
+    circulo1 ->dibujar();
+    cout << "Área del círculo: " << circulo1 ->area() << endl;
     cout << endl;
     
     triangulo1 ->dibujar();
@@ -82,7 +81,7 @@ int main()
     cout << endl;
 
     
-    delete cuadrado1;
+    delete circulo1;
     delete rectangulo1;
     delete triangulo1;
 
