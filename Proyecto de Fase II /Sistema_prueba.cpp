@@ -41,50 +41,66 @@ public:
     virtual ~Empleado() {}
 };
 
-float Empleado::asignacionFamiliar = 133;
+float Empleado::asignacionFamiliar = 100;
 
-// ===== DERIVADAS =====
+
+// ===== CLASE DERIVADA: GERENTE =====
 class Gerente : public Empleado {
+private:
+    float bonoDesempeno;
+
 public:
-    Gerente(string nom, string d, string cel, float sueldo, int h)
-        : Empleado(nom, d, cel, sueldo, h) {}
+    Gerente(string nom, string d, string cel, float sueldo, int h, float bono)
+        : Empleado(nom, d, cel, sueldo, h), bonoDesempeno(bono) {}
 
     float calcularDescuento() const override {
-        return sueldoBruto * 0.13;
+        return sueldoBruto * 0.10;
     }
 
     float calcularSueldoNeto() const override {
         float desc = calcularDescuento();
-        float bono;
-        if (hijos > 0) { bono = asignacionFamiliar;} 
-        else { bono = 0;}
-        return sueldoBruto - desc + bono + 200;
+        float bono = (hijos > 0) ? asignacionFamiliar*hijos : 0;
+        return sueldoBruto - desc + bono + bonoDesempeno;
     }
 
     string obtenerTipo() const override {
         return "Gerente";
     }
+
+    void mostrarDatos() const override {
+        Empleado::mostrarDatos();
+        cout << "Bono por Desempeño: S/" << bonoDesempeno << endl;
+    }
 };
 
+
+// ===== CLASE DERIVADA: OPERARIO =====
 class Operario : public Empleado {
+private:
+    int horasExtras;
+
 public:
-    Operario(string nom, string d, string cel, float sueldo, int h)
-        : Empleado(nom, d, cel, sueldo, h) {}
+    Operario(string nom, string d, string cel, float sueldo, int h, int horas)
+        : Empleado(nom, d, cel, sueldo, h), horasExtras(horas) {}
 
     float calcularDescuento() const override {
-        return sueldoBruto * 0.13;
+        return sueldoBruto * 0.10;
     }
 
     float calcularSueldoNeto() const override {
         float desc = calcularDescuento();
-        float bono;
-        if (hijos > 0) { bono = asignacionFamiliar;} 
-        else { bono = 0;}
-        return sueldoBruto - desc + bono;
+        float bono = (hijos > 0) ? asignacionFamiliar*hijos : 0;
+        float pagoHorasExtras = horasExtras * 10; // 10 soles por hora extra
+        return sueldoBruto - desc + bono + pagoHorasExtras;
     }
 
     string obtenerTipo() const override {
         return "Operario";
+    }
+
+    void mostrarDatos() const override {
+        Empleado::mostrarDatos();
+        cout << "Horas Extras: " << horasExtras << endl;
     }
 };
 
@@ -114,6 +130,7 @@ int main() {
     vector<Empleado*> empleados;
     Empresa empresa("MiEmpresa", "12345678901", "Av. Principal 123");
     int opcionPrincipal;
+    string contrAdmin;
 
     while (true) {
         cout << "\n=== MENU PRINCIPAL ===\n";
@@ -122,6 +139,13 @@ int main() {
 
         switch (opcionPrincipal) {
             case 1: {
+                cout << "\nPara Ingresar al Sistema Administrador.\nIngrese la contraseña\n";
+                cout << "Pista: Sistema123\n";
+                cout << "Ingrese la contraseña: "; cin >> contrAdmin;
+                while (contrAdmin != "Sistema123"){
+                    cout << "Contraseña incorrecta.\n";
+                    cout << "Ingrese contraseña: "; cin >> contrAdmin;
+                }
                 int opAdmin;
                 do {
                     cout << "\n--- MENU ADMINISTRADOR ---\n";
@@ -138,21 +162,40 @@ int main() {
                             int hijos;
                             cout << "Nombre del Trabajador: "; cin >> nom;
                             cout << "DNI del Trabajador: "; cin >> dni;
+                            while (dni.length() != 8 || !all_of(dni.begin(), dni.end(), ::isdigit)) {
+                                cout << "DNI inválido. Debe tener exactamente 8 dígitos numéricos.\n";
+                                cout << "DNI del Trabajador: "; cin >> dni;
+                            }
                             cout << "Celular del Trabajador: "; cin >> cel;
+                            while (cel.length() != 9 || !all_of(cel.begin(), cel.end(), ::isdigit)) {
+                                cout << "Celular inválido. Debe tener exactamente 9 dígitos numéricos.\n";
+                                cout << "Celular del Trabajador: "; cin >> cel;
+                            }
                             cout << "Sueldo Bruto del Trabajador: "; cin >> sueldo;
                             cout << "Nro de hijos del Trabajador: "; cin >> hijos;
                             cout << "Tipo del Trabajador (gerente/operario): "; cin >> tipo;
+                            while (tipo != "gerente" && tipo != "operario") {
+                                cout << "Tipo inválido. Solo se permite 'gerente' o 'operario'.\n";
+                                cout << "Tipo del Trabajador (gerente/operario): "; cin >> tipo;
+                            }
 
                             Empleado* e = buscarEmpleado(empleados, dni);
                             if (e) {
                                 e->actualizar(nom, dni, cel, sueldo, hijos);
                                 cout << "Empleado actualizado.\n";
                             } else {
-                                if (tipo == "gerente")
-                                    empleados.push_back(new Gerente(nom, dni, cel, sueldo, hijos));
-                                else
-                                    empleados.push_back(new Operario(nom, dni, cel, sueldo, hijos));
-                                cout << "Empleado registrado.\n";
+                                if (tipo == "gerente") 
+                                {
+                                    float bono;
+                                    cout << "Bono por desempeño: "; cin >> bono;
+                                    empleados.push_back(new Gerente(nom, dni, cel, sueldo, hijos, bono));
+                                }
+                                else 
+                                {
+                                    int horas;
+                                    cout << "Horas extras: "; cin >> horas;
+                                    empleados.push_back(new Operario(nom, dni, cel, sueldo, hijos, horas));
+                                }
                             }
                             break;
                         }
@@ -160,6 +203,10 @@ int main() {
                             string nom, ruc, dir;
                             cout << "Nuevo nombre: "; cin >> nom;
                             cout << "Nuevo RUC: "; cin >> ruc;
+                            while (ruc.length() != 11 || !all_of(ruc.begin(), ruc.end(), ::isdigit)) {
+                                cout << "RUC inválido. Debe tener exactamente 11 dígitos numéricos.\n";
+                                cout << "RUC del Trabajador: "; cin >> ruc;
+                            }
                             cout << "Nueva dirección: "; cin >> dir;
                             empresa.actualizar(nom, ruc, dir);
                             cout << "Datos de empresa actualizados.\n";
@@ -169,6 +216,7 @@ int main() {
                             int sub;
                             cout << "\n1. Nomina completa\n2. Boleta por DNI\n3. Sueldo con faltas\nOpción: ";
                             cin >> sub;
+                            cout << endl;
                             switch (sub) {
                                 case 1:
                                     if (empleados.empty()) {
