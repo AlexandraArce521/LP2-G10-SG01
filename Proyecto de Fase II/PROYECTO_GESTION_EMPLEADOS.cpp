@@ -121,6 +121,8 @@ public:
 
     string getUserId() const { return userId; }
     bool estaEnSesion() const { return sesionActiva; }
+    
+
 
     virtual ~Usuario() = default;
 };
@@ -128,7 +130,6 @@ public:
 // ========== Clase UsuarioTrabajador (abstracta) ==========
 
 class UsuarioTrabajador : public Usuario {
-    friend class UsuarioAdministrador;
 protected:
     string nombre, dni, celular;
     double sueldoBruto;
@@ -136,7 +137,7 @@ protected:
     AFP* afp;
     Empresa* empresa;
     static int asignacionFamiliar;
-    
+
 public:
     UsuarioTrabajador(string nom, string d, string cel, double sueldo, int hijos, AFP* a, Empresa* emp, string id, string pass)
         : Usuario(id, pass), nombre(nom), dni(d), celular(cel), sueldoBruto(sueldo), numHijos(hijos), afp(a), empresa(emp) {}
@@ -171,6 +172,9 @@ public:
 
     string getDni() const { return dni; }
     double getSueldo() const { return sueldoBruto; }
+    bool operator<(const UsuarioTrabajador& otro) {
+        return sueldoBruto < otro.sueldoBruto;
+    }    
 
     virtual ~UsuarioTrabajador() {};
 };
@@ -200,6 +204,8 @@ public:
         UsuarioTrabajador::mostrarDatos();
         cout << "area: " << area << "\nTipo: Gerente\n";
     }
+    
+
 };
 
 class Operario : public UsuarioTrabajador {
@@ -248,7 +254,7 @@ public:
              << "\nDescuentos por afp: S/" << descuentos<<endl;
 
         if (empleado->getHijos()>0) {
-            cout<<"bono de asignacion familiar: S/133"<< endl;
+            cout<<"bono de asignacion familiar: 133$"<< endl;
         }
         cout<< "\nSueldo Neto: S/" << sueldoNeto << "\n"<<endl;
     }
@@ -293,6 +299,7 @@ class UsuarioAdministrador : public Usuario {
 private:
     string nombre, dni;
     Empresa* empresa;
+    UsuarioTrabajador* trabajador;
 
 public:
     UsuarioAdministrador(string nom, string d, string id, string pass, Empresa* emp)
@@ -305,52 +312,10 @@ public:
     } 
 
     void actualizarDatosEmpleado(UsuarioTrabajador* emp) {
-        string nuevoTipo;
-        double nuevoSueldo;
-    
-        cout << "\n--- ACTUALIZAR DATOS DEL EMPLEADO ---\n";
-        cout << "Nuevo sueldo bruto: ";
-        cin >> nuevoSueldo;
-    
-        cout << "Nuevo tipo de trabajador (Operario/Gerente): ";
-        cin >> nuevoTipo;
-        while (nuevoTipo != "Gerente" && nuevoTipo != "Operario") {
-            cout << "Tipo inválido. Ingrese 'Gerente' o 'Operario': ";
-            cin >> nuevoTipo;
-        }
-    
-        // Guardamos datos directamente desde atributos protegidos
-        string nombre = emp->nombre;
-        string dni = emp->dni;
-        string celular = emp->celular;
-        int hijos = emp->numHijos;
-        string id = emp->userId;
-        string pass = emp->contrasenia;
-        AFP* afp = emp->afp;
-    
-        // Eliminamos el trabajador anterior
-        auto& lista = empresa->getTrabajadores();
-        auto it = find(lista.begin(), lista.end(), emp);
-        if (it != lista.end()) {
-            delete *it;
-            lista.erase(it);
-        }
-    
-        // Creamos nuevo trabajador según tipo
-        UsuarioTrabajador* nuevo = nullptr;
-    
-        if (nuevoTipo == "Gerente") {
-            string area;
-            cout << "Área del Gerente: ";
-            cin >> area;
-            nuevo = new Gerente(nombre, dni, celular, nuevoSueldo, hijos, afp, empresa, id, pass, area);
-        } else {
-            nuevo = new Operario(nombre, dni, celular, nuevoSueldo, hijos, afp, empresa, id, pass);
-        }
-    
-        empresa->agregarEmpleado(nuevo);
-    
-        cout << "\nEmpleado actualizado correctamente.\n";
+        double sueldo;
+        cout << "Nuevo sueldo: "; cin >> sueldo;
+        emp->setSueldo(sueldo);
+        cout<<"\nDatos actualizados correctamente..."<<endl;
     }
 
     void generarReporteGeneral(Nomina nom)  {
@@ -391,6 +356,28 @@ public:
             cout<<"no se encontro al empleado..."<<endl;
         }
     }
+
+
+    void mostrarSueldosOrdenados() {
+        const auto& trabajadores = empresa->getTrabajadores();
+        if (trabajadores.empty()) {
+            cout << "\nNo hay empleados registrados para mostrar sueldos.\n";
+            return;
+        }
+
+        vector<UsuarioTrabajador*> copiaTrabajadores = trabajadores;
+        sort(copiaTrabajadores.begin(), copiaTrabajadores.end(),
+             [](const UsuarioTrabajador* a, const UsuarioTrabajador* b) {
+                 return *a < *b;
+             });
+
+        cout << "\n--- Sueldos de empleados (de mayor a menor) ---\n";
+        for ( auto* emp : copiaTrabajadores) {
+            emp->mostrarDatos();
+            cout << "Sueldo Neto: S/" << emp->calcularSueldoNeto() << "\n--------------------\n";
+        }
+    }
+
 };
 
 // ========== Implementación de búsqueda en Empresa ==========
@@ -546,7 +533,7 @@ int main() {
             if (admin->estaEnSesion()) {
                 int op2;
                 do {
-                    cout << "\n1. Actualizar datos de empleado\n2. Actualizar empresa\n3. Reportes\n4. Salir\nOpcion: ";
+                    cout << "\n1. Actualizar datos de empleado\n2. Actualizar empresa\n3. Reportes\n4. Mostrar sueldos ordenados\n5. Salir\nOpcion: ";
                     cin >> op2;
                     if (op2 == 1) {
                         string dni;
@@ -593,8 +580,10 @@ int main() {
                             break;
                         }
                       }
+                    } else if (op2 == 4) {
+                        admin->mostrarSueldosOrdenados();
                     }
-                } while (op2 != 4);
+                } while (op2 != 5);
             }
         } else if (op == 3) break;
     }
