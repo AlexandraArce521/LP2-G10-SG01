@@ -149,14 +149,16 @@ int main() {
                 int opAdmin;
                 do {
                     cout << "\n--- MENU ADMINISTRADOR ---\n";
-                    cout << "1. Registrar o Actualizar Empleado\n";
-                    cout << "2. Actualizar datos de Empresa\n";
-                    cout << "3. Reportes\n";
-                    cout << "4. Salir\nOpción: ";
+                    cout << "1. Registrar Empleado\n";
+                    cout << "2. Actualizar datos de Empleado\n";                    
+                    cout << "3. Actualizar datos de Empresa\n";
+                    cout << "4. Reportes\n";
+                    cout << "5. Salir\nOpción: ";
                     cin >> opAdmin;
 
                     switch (opAdmin) {
-                        case 1: {
+                        case 1: 
+                        {
                             string nom, dni, cel, tipo;
                             float sueldo;
                             int hijos;
@@ -181,25 +183,66 @@ int main() {
 
                             Empleado* e = buscarEmpleado(empleados, dni);
                             if (e) {
-                                e->actualizar(nom, dni, cel, sueldo, hijos);
-                                cout << "Empleado actualizado.\n";
+                                cout << "Ya existe un empleado con ese DNI.\n";
                             } else {
-                                if (tipo == "gerente") 
-                                {
+                                if (tipo == "gerente") {
                                     float bono;
                                     cout << "Bono por desempeño: "; cin >> bono;
                                     empleados.push_back(new Gerente(nom, dni, cel, sueldo, hijos, bono));
-                                }
-                                else 
-                                {
+                                } else {
                                     int horas;
                                     cout << "Horas extras: "; cin >> horas;
                                     empleados.push_back(new Operario(nom, dni, cel, sueldo, hijos, horas));
                                 }
+                                cout << "Empleado registrado.\n";
                             }
                             break;
                         }
-                        case 2: {
+                        case 2:
+                        {
+                            string dni;
+                            cout << "DNI del empleado a modificar: ";
+                            cin >> dni;
+                            Empleado* emp = buscarEmpleado(empleados, dni);
+                            if (!emp) {
+                                cout << "Empleado no encontrado.\n";
+                                break;
+                            }
+                    
+                            string tipoNuevo;
+                            float nuevoSueldo;
+                            cout << "Nuevo tipo (gerente/operario): "; cin >> tipoNuevo;
+                            while (tipoNuevo != "gerente" && tipoNuevo != "operario") {
+                                cout << "Tipo inválido. Ingrese 'gerente' o 'operario': "; cin >> tipoNuevo;
+                            }
+                            cout << "Nuevo sueldo bruto: "; cin >> nuevoSueldo;
+                            
+                            cout <<"\nEMPLEADO A MODIFICAR\n";
+                            string nom = "", cel = "";
+                            int hijos = emp->getHijos();
+                    
+                            // Extraemos nombre y celular desde el objeto
+                            emp->mostrarDatos();  // Para ver los datos antes de cambiar                            // Eliminamos el antiguo
+                            auto it = find(empleados.begin(), empleados.end(), emp);
+                            if (it != empleados.end()) {
+                                delete *it;
+                                empleados.erase(it);
+                            }
+                    
+                            if (tipoNuevo == "gerente") {
+                                float bono;
+                                cout << "\nNuevo bono por desempeño: "; cin >> bono;
+                                empleados.push_back(new Gerente(nom, dni, cel, nuevoSueldo, hijos, bono));
+                            } else {
+                                int horas;
+                                cout << "\nHoras extras nuevas: "; cin >> horas;
+                                empleados.push_back(new Operario(nom, dni, cel, nuevoSueldo, hijos, horas));
+                            }
+                            cout << "Empleado modificado correctamente.\n";
+                            break;
+                        }
+                        
+                        case 3: {
                             string nom, ruc, dir;
                             cout << "Nuevo nombre: "; cin >> nom;
                             cout << "Nuevo RUC: "; cin >> ruc;
@@ -212,13 +255,13 @@ int main() {
                             cout << "Datos de empresa actualizados.\n";
                             break;
                         }
-                        case 3: {
+                        case 4: {
                             int sub;
                             cout << "\n1. Nomina completa\n2. Boleta por DNI\n3. Sueldo con faltas\nOpción: ";
                             cin >> sub;
                             cout << endl;
                             switch (sub) {
-                                case 1:
+                                case 1:{
                                     if (empleados.empty()) {
                                         cout << "No hay empleados registrados.\n";
                                     } else {
@@ -229,6 +272,7 @@ int main() {
                                         }
                                     }
                                     break;
+                                }
                                 case 2: {
                                     string dni;
                                     cout << "DNI: "; cin >> dni;
@@ -252,7 +296,8 @@ int main() {
                                         cout << "Inasistencias: "; cin >> faltas;
                                         float total = e->calcularSueldoNeto() - (faltas * 20);
                                         e->mostrarDatos();
-                                        cout << "Sueldo Neto ajustado: S/" << total << endl;
+                                        cout << "Inasistencias: "<< faltas<< endl;
+                                        cout << "Sueldo Neto con"<< faltas<< "inasistencias: S/" << total << endl;
                                     } else {
                                         cout << "Empleado no encontrado.\n";
                                     }
@@ -262,7 +307,7 @@ int main() {
                             break;
                         }
                     }
-                } while (opAdmin != 4);
+                } while (opAdmin != 5);
                 break;
             }
 
@@ -293,7 +338,15 @@ int main() {
                             int h;
                             cout << "Nuevo nombre: "; cin >> nom;
                             cout << "Nuevo DNI: "; cin >> d;
+                            while (d.length() != 8 || !all_of(d.begin(), d.end(), ::isdigit)) {
+                                cout << "DNI inválido. Debe tener exactamente 8 dígitos numéricos.\n";
+                                cout << "DNI del Trabajador: "; cin >> d;
+                            }
                             cout << "Celular: "; cin >> cel;
+                            while (cel.length() != 9 || !all_of(cel.begin(), cel.end(), ::isdigit)) {
+                                cout << "Celular inválido. Debe tener exactamente 9 dígitos numéricos.\n";
+                                cout << "Celular del Trabajador: "; cin >> cel;
+                            }
                             cout << "Sueldo Bruto: "; cin >> sueldo;
                             cout << "Nro hijos: "; cin >> h;
                             emp->actualizar(nom, d, cel, sueldo, h);
