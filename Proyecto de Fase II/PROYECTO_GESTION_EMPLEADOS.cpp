@@ -3,7 +3,6 @@
 #include <string>
 #include <algorithm>
 #include <map>
-#include <memory>
 using namespace std;
 
 // ========== Clase AFP y subclases ==========
