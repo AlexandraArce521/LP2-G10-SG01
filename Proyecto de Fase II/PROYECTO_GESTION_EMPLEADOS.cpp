@@ -128,6 +128,7 @@ public:
 // ========== Clase UsuarioTrabajador (abstracta) ==========
 
 class UsuarioTrabajador : public Usuario {
+    friend class UsuarioAdministrador;
 protected:
     string nombre, dni, celular;
     double sueldoBruto;
@@ -135,7 +136,7 @@ protected:
     AFP* afp;
     Empresa* empresa;
     static int asignacionFamiliar;
-
+    
 public:
     UsuarioTrabajador(string nom, string d, string cel, double sueldo, int hijos, AFP* a, Empresa* emp, string id, string pass)
         : Usuario(id, pass), nombre(nom), dni(d), celular(cel), sueldoBruto(sueldo), numHijos(hijos), afp(a), empresa(emp) {}
@@ -304,10 +305,52 @@ public:
     } 
 
     void actualizarDatosEmpleado(UsuarioTrabajador* emp) {
-        double sueldo;
-        cout << "Nuevo sueldo: "; cin >> sueldo;
-        emp->setSueldo(sueldo);
-        cout<<"\nDatos actualizados correctamente..."<<endl;
+        string nuevoTipo;
+        double nuevoSueldo;
+    
+        cout << "\n--- ACTUALIZAR DATOS DEL EMPLEADO ---\n";
+        cout << "Nuevo sueldo bruto: ";
+        cin >> nuevoSueldo;
+    
+        cout << "Nuevo tipo de trabajador (Operario/Gerente): ";
+        cin >> nuevoTipo;
+        while (nuevoTipo != "Gerente" && nuevoTipo != "Operario") {
+            cout << "Tipo inválido. Ingrese 'Gerente' o 'Operario': ";
+            cin >> nuevoTipo;
+        }
+    
+        // Guardamos datos directamente desde atributos protegidos
+        string nombre = emp->nombre;
+        string dni = emp->dni;
+        string celular = emp->celular;
+        int hijos = emp->numHijos;
+        string id = emp->userId;
+        string pass = emp->contrasenia;
+        AFP* afp = emp->afp;
+    
+        // Eliminamos el trabajador anterior
+        auto& lista = empresa->getTrabajadores();
+        auto it = find(lista.begin(), lista.end(), emp);
+        if (it != lista.end()) {
+            delete *it;
+            lista.erase(it);
+        }
+    
+        // Creamos nuevo trabajador según tipo
+        UsuarioTrabajador* nuevo = nullptr;
+    
+        if (nuevoTipo == "Gerente") {
+            string area;
+            cout << "Área del Gerente: ";
+            cin >> area;
+            nuevo = new Gerente(nombre, dni, celular, nuevoSueldo, hijos, afp, empresa, id, pass, area);
+        } else {
+            nuevo = new Operario(nombre, dni, celular, nuevoSueldo, hijos, afp, empresa, id, pass);
+        }
+    
+        empresa->agregarEmpleado(nuevo);
+    
+        cout << "\nEmpleado actualizado correctamente.\n";
     }
 
     void generarReporteGeneral(Nomina nom)  {
@@ -557,3 +600,4 @@ int main() {
     }
     return 0;
 }
+
