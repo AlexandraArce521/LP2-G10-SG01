@@ -26,6 +26,7 @@ public:
     }
 
     string getDNI() const { return dni; }
+    string getNombre() const { return nombre; }
     float getSueldoBruto() const { return sueldoBruto; }
     int getHijos() const { return hijos; }
 
@@ -261,11 +262,30 @@ int main() {
                             cin >> sub;
                             cout << endl;
                             switch (sub) {
-                                case 1:{
+                                case 1: {
                                     if (empleados.empty()) {
                                         cout << "No hay empleados registrados.\n";
                                     } else {
-                                        sort(empleados.begin(), empleados.end());
+                                        int orden;
+                                        cout << "\n--- VER NOMINA ---\n";
+                                        cout << "1. Orden alfabético por nombre\n";
+                                        cout << "2. Orden por salario neto (mayor a menor)\n";
+                                        cout << "Opción: ";
+                                        cin >> orden;
+                                
+                                        if (orden == 1) {
+                                            sort(empleados.begin(), empleados.end(), [](Empleado* a, Empleado* b) {
+                                                return a->getNombre() < b->getNombre(); 
+                                            });
+                                        } else if (orden == 2) {
+                                            sort(empleados.begin(), empleados.end(), [](Empleado* a, Empleado* b) {
+                                                return a->calcularSueldoNeto() > b->calcularSueldoNeto();
+                                            });
+                                        } else {
+                                            cout << "Opción inválida.\n";
+                                            break;
+                                        }
+                                
                                         for (Empleado* e : empleados) {
                                             e->mostrarDatos();
                                             cout << "Sueldo Neto: S/" << e->calcularSueldoNeto() << "\n---\n";
