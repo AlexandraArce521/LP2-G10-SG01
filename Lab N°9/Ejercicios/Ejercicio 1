@@ -35,8 +35,56 @@ public:
     }
 };
 
+class Rectangulo : public Figura {
+private:
+    double lado;
+    double base;
+
+public:
+    Rectangulo(double l, double b) {
+        lado = l;
+        base = b;
+    }
+    
+    double area() override {
+        return lado*base;
+    }
+    
+    double perimetro () override {
+        return 2*lado + 2*base;
+    }
+    
+    void mostrar() override {
+        cout << "Rectangulo"<< endl;
+        cout << "Lado: " << lado << endl;
+        cout << "Base: " <<  base <<endl;
+    }
+};
+
+class Triangulo : public Figura {
+private:
+    double base, altura;
+    vector<double> lados;
+public:
+    Triangulo(double base, double altura, vector<double> lados) 
+        : base(base), altura(altura), lados(lados) {}
+    
+    double area() override {
+        return 0.5 * base * altura;
+    }
+    
+    double perimetro() override {
+        double perimetro = 0;
+        for (double lado : lados) {
+            perimetro += lado;
+        }
+        return perimetro;
+    }
+};
+
 int main()
 {
+    vector <Figura*> figuras;
     Figura* f1 = new Circulo(3.0);
     f1->mostrar();
     return 0;
