@@ -1,1 +1,43 @@
 
+#include<vector>
+#include <iostream>
+
+using namespace std;
+
+class Figura{
+    public:
+    virtual double area() = 0;
+    virtual double perimetro() = 0;
+    virtual void mostrar() = 0;
+};
+
+class Circulo : public Figura {
+private:
+    double radio;
+
+public:
+    Circulo(double r) {
+        radio = r;
+    }
+    
+    double area() override {
+        return 3.1416*radio*radio;
+    }
+    
+    double perimetro () override {
+        return 2*3.1416*radio;
+    }
+    
+    void mostrar() override {
+        cout << "Circulo"<< endl;
+        cout << "Radio: " << radio << endl;
+        cout << "Perímetro: " << radio*2 <<endl;
+    }
+};
+
+int main()
+{
+    Figura* f1 = new Circulo(3.0);
+    f1->mostrar();
+    return 0;
+}
