@@ -24,20 +24,20 @@ public:
      :especie(e), habitat(h), nombre(n), edad(ed)  {}
     
     void comer() override {
-        cout << "Mamifero: " << especie << " esta comiendo "<<endl;
+        cout << "Mamifero: " << nombre << " esta comiendo "<<endl;
 
     }
     
     void dormir() override {
-        cout << "Mamifero: " << especie << " esta durmiendo " << endl;
+        cout << "Mamifero: " << nombre << " esta durmiendo " << endl;
     }
     
     void moverse() override {
-        cout << "Mamifero: " << especie << " se mueve en " << habitat << endl;
+        cout << "Mamifero: " << nombre << " se mueve en " << habitat << endl;
     }
     
     void mostrar() override {
-        cout << "\nInformación del Mamífero:" << endl;
+        cout << "Información del Mamífero:" << endl;
         cout << "  Nombre: " << nombre << endl;
         cout << "  Especie: " << especie << endl;
         cout << "  Edad: " << edad << " años" << endl;
@@ -58,20 +58,20 @@ public:
      : volar(v), nombre(n), especie(e), habitat(h), edad(ed) {}
      
     void comer() override {
-        cout << "Ave: " << especie << " esta comiendo "<<endl;
+        cout << "Ave: " << nombre << " esta comiendo "<<endl;
 
     }
     
     void dormir() override {
-        cout << "Ave: " << especie << " esta durmiendo " << endl;
+        cout << "Ave: " << nombre << " esta durmiendo " << endl;
     }
     
     void moverse() override {
-        cout << "Ave: " << especie << " se mueve en " << habitat << endl;
+        cout << "Ave: " << nombre << " se mueve en " << habitat << endl;
     }  
 
     void mostrar() override {
-        cout << "\nInformación del Ave:" << endl;
+        cout << "Información del Ave:" << endl;
         cout << "  Nombre: " << nombre << endl;
         cout << "  Especie: " << especie << endl;
         cout << "  Edad: " << edad << " años" << endl;
@@ -92,20 +92,20 @@ public:
         : nombre(n), especie(e), habitat(h), esVeneno(veneno) {}
 
     void comer() override {
-        cout << "Reptil: " << especie << " esta comiendo "<<endl;
+        cout << "Reptil: " << nombre << " esta comiendo "<<endl;
 
     }
     
     void dormir() override {
-        cout << "Reptil: " << especie << " esta durmiendo " << endl;
+        cout << "Reptil: " << nombre << " esta durmiendo " << endl;
     }
     
     void moverse() override {
-        cout << "Reptil: " << especie << " se mueve en " << habitat << endl;
+        cout << "Reptil: " << nombre << " se mueve en " << habitat << endl;
     } 
 
     void mostrar() override {
-        cout << "Reptil:" << endl;
+        cout << "Información del Reptil:" << endl;
         cout << "  Nombre: " << nombre << endl;
         cout << "  Especie: " << especie << endl;
         cout << "  ¿Es venenoso?: " << (esVeneno ? "Sí" : "No") << endl; // (condición)? valor_si_verdadero: valor_si_falso
@@ -117,9 +117,50 @@ int main () {
     
     vector <Animal*> animales;
     
-    animales.push_back(new Ave())
+    animales.push_back(new Ave(true, "Loro", "Ave terrestre", "Ambientes tropicales", 2));
+    animales.push_back(new Mamifero("Marsupial", "Bosques", "Spike", 4));
+    animales.push_back(new Reptil("Pascal", "Chamaeleonidae", "Bosques", false));
+    animales.push_back(new Ave(false, "Pingüino", "Ave marina", "Sphenisciformes", 3));
+
+    cout << "\n==============================" << endl;
+    for (int i = 0; i < animales.size(); ++i) {
+        animales[i]->comer();
+    }
+
+    cout << "\n==============================" << endl;
+
+    for (int i = 0; i < animales.size(); ++i) {
+        animales[i]->dormir();
+    }    
+    cout << "\n==============================" << endl;
+
+    for (int i = 0; i < animales.size(); ++i) {
+        animales[i]->moverse();
+    }
+    
+    cout << "\n==============================" << endl;
+
+    for (int i = 0; i < animales.size(); ++i) {
+        cout << i+1 <<".- ";
+        animales[i]->mostrar();
+    }
+
+    cout << "\n==============================" << endl;
+
+    
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
