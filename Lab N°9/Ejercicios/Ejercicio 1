@@ -9,6 +9,7 @@ class Figura{
     virtual double area() = 0;
     virtual double perimetro() = 0;
     virtual void mostrar() = 0;
+    virtual ~Figura() = default;
 };
 
 class Circulo : public Figura {
@@ -58,6 +59,7 @@ public:
         cout << "Rectangulo"<< endl;
         cout << "Lado: " << lado << endl;
         cout << "Base: " <<  base <<endl;
+        cout << "Perimetro: " << perimetro() << endl;
     }
 };
 
@@ -82,7 +84,7 @@ public:
         return perimetro;
     }
     
-    void mostrar() override {
+    void mostrar() {
         cout << "Triangulo" << endl;
         cout << "Lados: " << endl;
         for (int i = 0; i < lados.size(); ++i) {
@@ -91,6 +93,7 @@ public:
         
         cout << "Base: " << base << endl;
         cout << "Altura: " << altura << endl;
+        cout << "Perímetro: " << perimetro() << endl;
     }
 };
 
@@ -115,3 +118,4 @@ int main() {
 
     return 0;
 }
+ 
