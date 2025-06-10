@@ -120,57 +120,30 @@ int main () {
     animales.push_back(new Ave(true, "Loro", "Ave terrestre", "Ambientes tropicales", 2));
     animales.push_back(new Mamifero("Marsupial", "Bosques", "Spike", 4));
     animales.push_back(new Reptil("Pascal", "Chamaeleonidae", "Bosques", false));
-    animales.push_back(new Ave(false, "Pingüino", "Ave marina", "Sphenisciformes", 3));
+    animales.push_back(new Ave(false, "Pingüino", "Ave marina", "Glaciares", 3));
 
     cout << "\n==============================" << endl;
     for (int i = 0; i < animales.size(); ++i) {
         animales[i]->comer();
     }
-
+    cout << "==============================\n" << endl;
     cout << "\n==============================" << endl;
-
     for (int i = 0; i < animales.size(); ++i) {
         animales[i]->dormir();
     }    
+    cout << "==============================\n" << endl;
     cout << "\n==============================" << endl;
-
     for (int i = 0; i < animales.size(); ++i) {
         animales[i]->moverse();
     }
-    
+    cout << "==============================\n" << endl;
     cout << "\n==============================" << endl;
-
     for (int i = 0; i < animales.size(); ++i) {
         cout << i+1 <<".- ";
         animales[i]->mostrar();
+        cout<<endl;
     }
+    cout << "==============================" << endl;
 
-    cout << "\n==============================" << endl;
-
-    
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
