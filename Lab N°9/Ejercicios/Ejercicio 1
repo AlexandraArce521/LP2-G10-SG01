@@ -65,9 +65,10 @@ class Triangulo : public Figura {
 private:
     double base, altura;
     vector<double> lados;
+    
 public:
-    Triangulo(double base, double altura, vector<double> lados) 
-        : base(base), altura(altura), lados(lados) {}
+    Triangulo(double b, double a, vector<double> l) 
+        : base(b), altura(a), lados(l) {}
     
     double area() override {
         return 0.5 * base * altura;
@@ -80,12 +81,37 @@ public:
         }
         return perimetro;
     }
+    
+    void mostrar() {
+        cout << "Triangulo" << endl;
+        cout << "Lados: " << endl;
+        for (int i = 0; i < lados.size(); ++i) {
+            cout << "   -"<<lados[i] << endl;
+        }
+        
+        cout << "Base: " << base << endl;
+        cout << "Altura: " << altura << endl;
+    }
 };
 
-int main()
-{
-    vector <Figura*> figuras;
-    Figura* f1 = new Circulo(3.0);
-    f1->mostrar();
+
+int main() {
+    vector<Figura*> figuras;
+
+    vector<double> lados = {5.0, 5.0};
+    figuras.push_back(new Circulo(5.0));
+    figuras.push_back(new Rectangulo(4.0, 6.0));
+    figuras.push_back(new Triangulo(3.0, 4.0, lados));
+
+    for (int i = 0; i < figuras.size(); ++i) {
+        cout << "==========Información de las figuras======== \n" << i + 1 << ":" << endl;
+        figuras[i]->mostrar();
+        cout << endl;
+    }
+
+    for (Figura* figura : figuras) {
+        delete figura;
+    }
+
     return 0;
 }
