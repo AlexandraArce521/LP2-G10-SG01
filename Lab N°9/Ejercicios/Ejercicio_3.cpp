@@ -29,10 +29,7 @@ public:
         cout << "Salario bruto: " << calcularSalario() << endl;
         cout << "Descuento AFP (10%): " << calcularSalario() * 0.10 << endl; 
         cout << "Salario neto anual: S/ " << calcularSalario() * 0.90 << endl;
-    
-        
     }
-
 };
 
 class PorHora: public Salario {
@@ -42,7 +39,6 @@ private:
     double tarifaPorHora;
 
 public:  
-    
     PorHora(string n, int horas, double tarifa)
      :nombre(n), horasTrabajadas(horas), tarifaPorHora(tarifa) {}
     
@@ -66,9 +62,7 @@ private:
     double ventas;
     double porcentajeComision;
     
-    
 public:
-
     Comisionista(string n, double sueldoB, double v, double porcentaje)
      :nombre(n), sueldoBase(sueldoB), ventas(v), porcentajeComision(porcentaje) {}
 
@@ -87,7 +81,6 @@ public:
 };
 
 int main () {
-    
     vector <Salario*> empleados;
     
     empleados.push_back(new Asalariado(2500.0, "Juan Vega"));
@@ -102,7 +95,6 @@ int main () {
 
     for (int i = 0; i < empleados.size(); ++i) {
         delete empleados[i];
-    }
-    
+    }    
     return 0;
 }
