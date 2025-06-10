@@ -75,7 +75,7 @@ public:
         cout << "  Nombre: " << nombre << endl;
         cout << "  Especie: " << especie << endl;
         cout << "  Edad: " << edad << " años" << endl;
-        cout << (!volar ? "  No vuela" : "  Si vuela" ) << endl; // (condición)? valor_si_verdadero: valor_si_falso
+        cout << (!volar ? "  No vuela" : "  Si vuela" ) << endl; // (condición)? valor_verdadero: valor_falso
     }
     
 };
