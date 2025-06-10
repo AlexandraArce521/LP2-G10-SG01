@@ -31,7 +31,7 @@ public:
     void mostrar() override {
         cout << "Circulo"<< endl;
         cout << "Radio: " << radio << endl;
-        cout << "Perímetro: " << radio*2 <<endl;
+        cout << "Perímetro: " << perimetro() <<endl;
     }
 };
 
@@ -82,7 +82,7 @@ public:
         return perimetro;
     }
     
-    void mostrar() {
+    void mostrar() override {
         cout << "Triangulo" << endl;
         cout << "Lados: " << endl;
         for (int i = 0; i < lados.size(); ++i) {
@@ -98,7 +98,7 @@ public:
 int main() {
     vector<Figura*> figuras;
 
-    vector<double> lados = {5.0, 5.0};
+    vector<double> lados = {5.0, 4.0, 3.0};
     figuras.push_back(new Circulo(5.0));
     figuras.push_back(new Rectangulo(4.0, 6.0));
     figuras.push_back(new Triangulo(3.0, 4.0, lados));
