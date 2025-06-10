@@ -1,4 +1,3 @@
-
 #include<vector>
 #include <iostream>
 
@@ -90,7 +89,7 @@ public:
         cout << "Triangulo" << endl;
         cout << "Lados: " << endl;
         for (int i = 0; i < lados.size(); ++i) {
-            cout << "   -"<<lados[i] << endl;
+            cout << "-|  "<<lados[i] << endl;
         }
         
         cout << "Base: " << base << endl;
@@ -108,9 +107,11 @@ int main() {
     figuras.push_back(new Circulo(5.0));
     figuras.push_back(new Rectangulo(4.0, 6.0));
     figuras.push_back(new Triangulo(3.0, 4.0, lados));
+    
+    cout << "=====Información de las figuras=====" << endl;
 
     for (int i = 0; i < figuras.size(); ++i) {
-        cout << "==========Información de las figuras======== \n" << i + 1 << ":" << endl;
+        cout << "==================================== \n" << i + 1 << ":" << endl;
         figuras[i]->mostrar();
         cout << endl;
     }
@@ -121,4 +122,3 @@ int main() {
 
     return 0;
 }
- 
