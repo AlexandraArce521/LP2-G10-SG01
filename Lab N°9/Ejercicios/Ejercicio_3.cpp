@@ -90,7 +90,7 @@ int main () {
 
     for (int i = 0; i < empleados.size(); ++i) {
         empleados[i]->informacionEmpleado();
-        cout << "  => Salario calculado: S/ " << empleados[i]->calcularSalario() << "\n\n";
+        //cout << "  => Salario calculado: S/ " << empleados[i]->calcularSalario() << "\n\n";
     }
 
     for (int i = 0; i < empleados.size(); ++i) {
