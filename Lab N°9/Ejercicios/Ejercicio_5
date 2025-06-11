@@ -4,8 +4,17 @@
 using namespace std;
 
 class Producto {
+protected:
+    string nombre;
+    int cantidad;
+    double precioBase;
+    double porcentaje;
+    string codigo;
+
 public:
-    
+
+    Producto(string n, int c, double pBase, double porcent, string cod)
+    : nombre(n), cantidad(c), precioBase(pBase), porcentaje(porcent), codigo(cod) {} 
     virtual double valorTotal()  = 0;
     virtual double aplicarDescuento() = 0;
     virtual void mostrar() = 0;
@@ -14,19 +23,10 @@ public:
 };
 
 class Electronico : public Producto {
-private:  
-    string nombre;
-    int cantidad;
-    double precioBase;
-    double porcentaje;
-    string codigo;
-    double precioTotal;
-
-
 public:
 
     Electronico(string n, int c, double pBase, double porcent, string cod)
-    : nombre(n), cantidad(c), precioBase(pBase), porcentaje(porcent), codigo(cod), precioTotal(0.0) {}
+    :Producto(n, c, pBase, porcent, cod) {}
     
     double valorTotal() override {
         double precioTotal = precioBase * cantidad;
@@ -38,7 +38,7 @@ public:
     }
     
     void mostrar() override {
-            cout << "===INFORMACION DE VENTA DE PRODUCTOS ELÉCTRONICOS===\n";
+            cout << "\n===INFORMACION DE VENTA DE PRODUCTOS ELÉCTRONICOS===\n";
             cout << "Nombre: " << nombre << endl;
             cout << "Precio Base: " << precioBase << "$ c/u " << endl;
             cout << "Descuento: " << porcentaje << "%" << endl; 
@@ -48,13 +48,73 @@ public:
     
 };
 
-class 
+class Ropa : public Producto {
+private:
+    string talla;
+
+public:
+
+    Ropa(string n, int c, double pBase, double porcent, string cod, string t)
+    :Producto(n, c, pBase, porcent, cod), talla(t) {}
+
+    double valorTotal() override {
+        double precioTotal = precioBase * cantidad;
+        return precioTotal;
+    }
+    
+    double aplicarDescuento() override {
+        return valorTotal() - (valorTotal() * (porcentaje / 100.0));
+    }
+    
+    void mostrar() override {
+            cout << "\n===INFORMACION DE VENTA DE ROPA===\n";
+            cout << "Nombre: " << nombre << endl;
+            cout << "Talla: " << talla << endl;
+            cout << "Precio Base: " << precioBase << "$ c/u " << endl;
+            cout << "Descuento: " << porcentaje << "%" << endl; 
+            cout << "Precio Total: " << valorTotal() << "$ " << endl;
+            cout << "Precio Final (incluye descuento): " << aplicarDescuento() << "$ " << endl;
+        }
+    
+};
+
+class Alimento: public Producto {
+private: 
+    int fechaCaducidad;
+
+public:
+    Alimento(string n, int c, double pBase, double porcent, string cod, int fecha)
+    :Producto(n, c, pBase, porcent, cod), fechaCaducidad(fecha) {}
+
+    double valorTotal() override {
+        double precioTotal = precioBase * cantidad;
+        return precioTotal * (fechaCaducidad > 30 ? 1.0 : 0.9);
+    }
+    
+    double aplicarDescuento() override {
+        return valorTotal() - (valorTotal() * (porcentaje / 100.0));
+    }
+    
+    void mostrar() override {
+            cout << "\n===INFORMACION DE VENTA DE ALIMENTOS===\n";
+            cout << "Nombre: " << nombre << endl;
+            cout << "Porcentaje de Caducidad : " << fechaCaducidad << endl;
+            cout << "Precio Base: " << precioBase << "$ c/u " << endl;
+            cout << "Descuento: " << porcentaje << "%" << endl; 
+            cout << "Precio Total: " << valorTotal() << "$ " << endl;
+            cout << "Precio Final (incluye descuento): " << aplicarDescuento() << "$ " << endl;
+        }
+
+};
 
 int main()
 {
 
     vector <Producto*> productos;
     productos.push_back(new Electronico("Laptop", 3, 1208.90, 30, "123455"));
+    productos.push_back(new Ropa("Polo", 3, 80.90, 0.0, "54652", "M"));
+    productos.push_back(new Alimento("Pollo congelado", 2, 30.0, 10, "54652", 31));
+
     
     for (int i = 0; i < productos.size(); ++i) {
         productos[i]->mostrar();
