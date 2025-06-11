@@ -1,1 +1,68 @@
 
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Producto {
+public:
+    
+    virtual double valorTotal()  = 0;
+    virtual double aplicarDescuento() = 0;
+    virtual void mostrar() = 0;
+    virtual ~Producto() = default;
+    
+};
+
+class Electronico : public Producto {
+private:  
+    string nombre;
+    int cantidad;
+    double precioBase;
+    double porcentaje;
+    string codigo;
+    double precioTotal;
+
+
+public:
+
+    Electronico(string n, int c, double pBase, double porcent, string cod)
+    : nombre(n), cantidad(c), precioBase(pBase), porcentaje(porcent), codigo(cod), precioTotal(0.0) {}
+    
+    double valorTotal() override {
+        double precioTotal = precioBase * cantidad;
+        return precioTotal;
+    }
+    
+    double aplicarDescuento() override {
+        return valorTotal() - (valorTotal() * (porcentaje / 100.0));
+    }
+    
+    void mostrar() override {
+            cout << "===INFORMACION DE VENTA DE PRODUCTOS ELÉCTRONICOS===\n";
+            cout << "Nombre: " << nombre << endl;
+            cout << "Precio Base: " << precioBase << "$ c/u " << endl;
+            cout << "Descuento: " << porcentaje << "%" << endl; 
+            cout << "Precio Total: " << valorTotal() << "$ " << endl;
+            cout << "Precio Final (incluye descuento): " << aplicarDescuento() << "$ " << endl;
+        }
+    
+};
+
+class 
+
+int main()
+{
+
+    vector <Producto*> productos;
+    productos.push_back(new Electronico("Laptop", 3, 1208.90, 30, "123455"));
+    
+    for (int i = 0; i < productos.size(); ++i) {
+        productos[i]->mostrar();
+    }
+    
+    for (Producto* p : productos) {
+        delete p;
+    }
+
+    return 0;
+}
