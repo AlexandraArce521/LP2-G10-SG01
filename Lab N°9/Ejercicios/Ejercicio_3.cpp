@@ -20,15 +20,15 @@ public:
      :sMensual(mensual), nombre(n) {}
      
     double calcularSalario() override {
-        return sMensual * 12;
+        return sMensual * 12 * 0.90;
     }
     
     void informacionEmpleado() override {
         cout << "===INFORMACION DE EMPLEADO ASALARIADO==="<< endl;
         cout << "Nombre: " << nombre << endl;
-        cout << "Salario bruto: " << calcularSalario() << endl;
-        cout << "Descuento AFP (10%): " << calcularSalario() * 0.10 << endl; 
-        cout << "Salario neto anual: S/ " << calcularSalario() * 0.90 << endl;
+        cout << "Salario bruto: " << calcularSalario()/0.90 << endl;
+        cout << "Descuento AFP (10%): " << calcularSalario()/0.90*0.10 << endl; 
+        cout << "Salario neto anual: S/ " << calcularSalario() << endl;
     }
 };
 
@@ -76,7 +76,6 @@ public:
         cout << "Sueldo base: " << sueldoBase << endl;
         cout << "N° de ventas: " <<ventas << endl;
         cout << "Comisión por venta: " << porcentajeComision*100 << endl;
-        cout << "Sueldo neto: " << calcularSalario() << endl;
     }
     
 };
@@ -86,12 +85,12 @@ int main () {
     
     empleados.push_back(new Asalariado(2500.0, "Juan Vega"));
     empleados.push_back(new PorHora("Claudia", 25.0, 160));
-    empleados.push_back(new Comisionista("Pedro", 1200.0, 100.0, 0.10));
+    empleados.push_back(new Comisionista("Pedro", 1200.0, 10000.0, 0.10));
     empleados.push_back(new Asalariado(3060.0, "Sheyla"));
 
     for (int i = 0; i < empleados.size(); ++i) {
         empleados[i]->informacionEmpleado();
-        //cout << "  => Salario calculado: S/ " << empleados[i]->calcularSalario() << "\n\n";
+        cout << "  => Salario calculado: S/ " << empleados[i]->calcularSalario() << "\n\n";
     }
 
     for (int i = 0; i < empleados.size(); ++i) {
