@@ -76,6 +76,7 @@ public:
         cout << "Sueldo base: " << sueldoBase << endl;
         cout << "N° de ventas: " <<ventas << endl;
         cout << "Comisión por venta: " << porcentajeComision*100 << endl;
+        cout << "Sueldo neto: " << calcularSalario() << endl;
     }
     
 };
@@ -85,7 +86,7 @@ int main () {
     
     empleados.push_back(new Asalariado(2500.0, "Juan Vega"));
     empleados.push_back(new PorHora("Claudia", 25.0, 160));
-    empleados.push_back(new Comisionista("Pedro", 1200.0, 10000.0, 0.10));
+    empleados.push_back(new Comisionista("Pedro", 1200.0, 100.0, 0.10));
     empleados.push_back(new Asalariado(3060.0, "Sheyla"));
 
     for (int i = 0; i < empleados.size(); ++i) {
