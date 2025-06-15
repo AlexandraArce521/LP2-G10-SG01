@@ -43,7 +43,7 @@ int main() {
     int arrEnteros[] = {64, 34, 25, 12, 22, 11, 90};
     int tamEnteros = 7;
     
-    Ordenar<int> ordEnteros(arrEnteros, tamEnteros);
+    Ordenar ordEnteros(arrEnteros, tamEnteros);
     cout << "Arreglo de enteros original: ";
     ordEnteros.imprimirArreglo();
     
@@ -54,7 +54,7 @@ int main() {
     float arrFlotantes[] = {64.5, 34.2, 25.7, 12.1, 22.9};
     int tamFlotantes = 5;
     
-    Ordenar<float> ordFlotantes(arrFlotantes, tamFlotantes);
+    Ordenar ordFlotantes(arrFlotantes, tamFlotantes);
     cout << "\nArreglo de flotantes original: ";
     ordFlotantes.imprimirArreglo();
     
@@ -65,7 +65,7 @@ int main() {
     string arrCadenas[] = {"naranja", "manzana", "banana", "kiwi"};
     int tamCadenas = 4;
     
-    Ordenar<string> ordCadenas(arrCadenas, tamCadenas);
+    Ordenar ordCadenas(arrCadenas, tamCadenas);
     cout << "\nArreglo de cadenas original: ";
     ordCadenas.imprimirArreglo();
     
