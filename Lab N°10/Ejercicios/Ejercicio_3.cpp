@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -19,6 +18,7 @@ template <class T> class Recipiente {
             for (int i = 0; i < v.size(); ++i) {
                 cout << v[i] << " ";
             }
+            cout << endl;
         }
 };
 
@@ -28,22 +28,37 @@ int main()
     vector<long> listLong = {5000, 3500, 4090, 4000};
     vector<string> listString = {"Z", "Y", "O", "A"};
     
-    cout << "\n=====Ordenar lista de enteros======" << endl;
+    cout << "\n=====Ordenar lista de enteros======\n" << endl;
     
     Recipiente<int> ordEnteros(listEnteros);
-    ordEnteros.OrdenarLista();
+    cout<< "Lista original: ";
     ordEnteros.MostrarLista();
     
-    cout << "\n=====Ordenar lista de números largos======" << endl;
+    ordEnteros.OrdenarLista();
+    cout<< "Lista ordenada: ";
+    ordEnteros.MostrarLista();
+    cout << "\n===================================\n" << endl;
+    
+    cout << "\n=====Ordenar lista de números largos======\n" << endl;
     Recipiente<long> ordLong(listLong);
-    ordLong.OrdenarLista();
+    cout<< "Lista original: ";
     ordLong.MostrarLista();
     
-    cout << "\n=====Ordenar lista de letras======" << endl;
+    ordLong.OrdenarLista();
+    cout<< "Lista ordenada: ";
+    ordLong.MostrarLista();
+    cout << "\n===================================\n" << endl;
+    
+    cout << "\n=====Ordenar lista de letras======\n" << endl;
     Recipiente<string> ordString(listString);
-    ordString.OrdenarLista();
+    cout<< "Lista original: ";
     ordString.MostrarLista();
-
+    
+    ordString.OrdenarLista();
+    cout<< "Lista ordenada: ";
+    ordString.MostrarLista();
+    cout << "\n===================================\n" << endl;
 
     return 0;
+    
 }
