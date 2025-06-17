@@ -9,7 +9,8 @@ private:
     vector<T> datos;
 
 public:
-
+    Recipiente(vector<T> v)
+    : datos(v) {}
     void agregar(const T& valor) {
         datos.push_back(valor);
     }
@@ -32,6 +33,11 @@ private:
     Recipiente<int> entregasPorRuta;
 
 public:
+    SistemaRutas()
+    : rutas(vector<string>()), 
+      vehiculos(vector<string>()), 
+      entregasPorRuta(vector<int>()) {}
+    
     void agregarRuta(const string& nombre) {
         rutas.agregar(nombre);
     }
@@ -71,4 +77,5 @@ int main() {
 
     return 0;
 }
+
 
