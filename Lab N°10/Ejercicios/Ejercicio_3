@@ -4,11 +4,11 @@
 #include <algorithm>
 using namespace std;
 
-template <class T> class Ordenar {
+template <class T> class Recipiente {
     private:
         vector <T> v;
     public:
-        Ordenar(vector<T>& v)
+        Recipiente(vector<T>& v)
          : v(v) {}
         
         void OrdenarLista() {
@@ -30,17 +30,17 @@ int main()
     
     cout << "\n=====Ordenar lista de enteros======" << endl;
     
-    Ordenar<int> ordEnteros(listEnteros);
+    Recipiente<int> ordEnteros(listEnteros);
     ordEnteros.OrdenarLista();
     ordEnteros.MostrarLista();
     
     cout << "\n=====Ordenar lista de números largos======" << endl;
-    Ordenar<long> ordLong(listLong);
+    Recipiente<long> ordLong(listLong);
     ordLong.OrdenarLista();
     ordLong.MostrarLista();
     
     cout << "\n=====Ordenar lista de letras======" << endl;
-    Ordenar<string> ordString(listString);
+    Recipiente<string> ordString(listString);
     ordString.OrdenarLista();
     ordString.MostrarLista();
 
