@@ -1,1 +1,49 @@
 
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+template <class T> class Ordenar {
+    private:
+        vector <T> v;
+    public:
+        Ordenar(vector<T>& v)
+         : v(v) {}
+        
+        void OrdenarLista() {
+            sort(v.begin(), v.end());
+        }
+        
+        void MostrarLista() {
+            for (int i = 0; i < v.size(); ++i) {
+                cout << v[i] << " ";
+            }
+        }
+};
+
+int main()
+{
+    vector<int> listEnteros = {5, 3, 1, 4, 2};
+    vector<long> listLong = {5000, 3500, 4090, 4000};
+    vector<string> listString = {"Z", "Y", "O", "A"};
+    
+    cout << "\n=====Ordenar lista de enteros======" << endl;
+    
+    Ordenar<int> ordEnteros(listEnteros);
+    ordEnteros.OrdenarLista();
+    ordEnteros.MostrarLista();
+    
+    cout << "\n=====Ordenar lista de números largos======" << endl;
+    Ordenar<long> ordLong(listLong);
+    ordLong.OrdenarLista();
+    ordLong.MostrarLista();
+    
+    cout << "\n=====Ordenar lista de letras======" << endl;
+    Ordenar<string> ordString(listString);
+    ordString.OrdenarLista();
+    ordString.MostrarLista();
+
+
+    return 0;
+}
