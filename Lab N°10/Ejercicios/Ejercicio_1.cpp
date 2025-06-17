@@ -2,10 +2,14 @@
 using namespace std;
 
 template <typename T>
-void ordenarArreglo(T arr[], int tam) {
-    for (int i = 0; i < tam - 1; i++) {
-        for (int j = 0; j < tam - i - 1; j++) {
-            if (arr[j] > arr[j + 1]) {
+void ordenarArreglo(T arr[], int tam) 
+{
+    for (int i = 0; i < tam - 1; i++) 
+    {
+        for (int j = 0; j < tam - i - 1; j++) 
+        {
+            if (arr[j] > arr[j + 1]) 
+            {
                 T temp = arr[j];
                 arr[j] = arr[j + 1];
                 arr[j + 1] = temp;
@@ -15,14 +19,16 @@ void ordenarArreglo(T arr[], int tam) {
 }
 
 template <typename T>
-void imprimirArreglo(T arr[], int tam) {
+void imprimirArreglo(T arr[], int tam) 
+{
     for (int i = 0; i < tam; i++) {
         cout << arr[i] << " ";
     }
     cout << endl;
 }
 
-int main() {
+int main() 
+{
     int arrEnteros[] = {64, 34, 25, 12, 22, 11, 90};
     int tamEnteros = sizeof(arrEnteros) / sizeof(arrEnteros[0]);
     
