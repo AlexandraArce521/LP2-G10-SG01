@@ -2,41 +2,48 @@
 using namespace std;
 
 template <typename T>
-class Ordenar {
-private:
-    T* arr; 
-    int tam;
-
-public:
-    Ordenar(T arr[], int tam) : tam(tam) {
-        this->arr = new T[tam];
-        for (int i = 0; i < tam; i++) {
-            this->arr[i] = arr[i];
+class Ordenar 
+{
+    private:
+        T* arr; 
+        int tam;
+    
+    public:
+        Ordenar(T arr[], int tam) : tam(tam) 
+        {
+            this->arr = new T[tam];
+            for (int i = 0; i < tam; i++) {
+                this->arr[i] = arr[i];
+            }
         }
-    }
-
-    void ordenarArreglo() {
-        for (int i = 0; i < tam - 1; i++) {
-            for (int j = 0; j < tam - i - 1; j++) {
-                if (arr[j] > arr[j + 1]) {
-                    T temp = arr[j];
-                    arr[j] = arr[j + 1];
-                    arr[j + 1] = temp;
+    
+        void ordenarArreglo() 
+        {
+            for (int i = 0; i < tam - 1; i++) 
+            {
+                for (int j = 0; j < tam - i - 1; j++) 
+                {
+                    if (arr[j] > arr[j + 1]) 
+                    {
+                        T temp = arr[j];
+                        arr[j] = arr[j + 1];
+                        arr[j + 1] = temp;
+                    }
                 }
             }
         }
-    }
-
-    void imprimirArreglo() {
-        for (int i = 0; i < tam; i++) {
-            cout << arr[i] << " ";
+    
+        void imprimirArreglo() 
+        {
+            for (int i = 0; i < tam; i++) {
+                cout << arr[i] << " ";
+            }
+            cout << endl;
         }
-        cout << endl;
-    }
-
-    ~Ordenar() {
-        delete[] arr;
-    }
+    
+        ~Ordenar() {
+            delete[] arr;
+        }
 };
 
 int main() {
