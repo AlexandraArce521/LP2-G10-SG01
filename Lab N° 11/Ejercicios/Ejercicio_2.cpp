@@ -1,14 +1,3 @@
-/* 
-Crea una función en C++ llamada "divide" que acepte dos números enteros  
-como parámetros. La función debe dividir el primer número por el  
-segundo número y devolver el resultado.  
-Sin embargo, si el segundo número es igual a cero, la función debe lanzar 
-una excepción de tipo "std::runtime_error" con un mensaje  
-indicando que no se puede dividir por cero. Luego,  
-en el programa principal, llama a la función "divide" con 
-diferentes valores y maneja las excepciones adecuadamente. 
-*/ 
-  
 #include <fstream>  
 #include <iostream>  
 #include <stdexcept>  
