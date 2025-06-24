@@ -1,6 +1,7 @@
 #include <fstream>  
 #include <iostream>  
 #include <stdexcept>  
+#include <vector>
 using namespace std;  
 
 
@@ -50,8 +51,25 @@ public:
 };
 
 int main()
-{
-    Persona p1("Juan", -3, "UCSM");
+{   
+    vector <Persona*> personas;
+    
+    personas.push_back(new Persona("Juan", 2, "Av. Villa Hermosa"));
+    personas.push_back(new Persona("Matias", 12, "Av. Arequipa"));
+    personas.push_back(new Persona("Marta", 20, "Urb Misti"));
+    personas.push_back(new Persona("Oscar", 45, "Urb. Rivera"));
+    personas.push_back(new Persona("María", 70, "Av. Lima"));
+
+    
+
+    fstream archivo;
+    archivo.open("Registro.txt", ios::out);
+
+     for (int i = 0; i < personas.size(); ++i) {
+        archivo << personas[i] << endl;
+    }   
+    
+    archivo.close();
 
     return 0;
 }
