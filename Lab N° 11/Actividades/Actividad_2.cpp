@@ -23,12 +23,12 @@ public:
     void registrarProducto(const string nombre, double precio, int cantidad) {
         for (const auto& prod : productos) {
             if (prod.nombre == nombre) {
-                cout << "Error: Producto ya existe.\n";
+                cout << "\nError: Producto ya existe.\n";
                 return;
             }
         }
         if (precio < 0 || cantidad < 0) {
-            cout << "Error: Precio o cantidad no pueden ser negativos.\n";
+            cout << "\nError: Precio o cantidad no pueden ser negativos.\n";
             return;
         }
 
@@ -45,7 +45,7 @@ public:
             archivo << p.nombre << "|" << p.precio << "|" << p.cantidad << "\n";
             archivo.close();
         } else {
-            cout << "Error al abrir el archivo para escritura.\n";
+            cout << "\nError al abrir el archivo para escritura.\n";
         }
     }
 
@@ -57,7 +57,7 @@ public:
             }
             archivo.close();
         } else {
-            cout << "Error al abrir el archivo para reescritura.\n";
+            cout << "\nError al abrir el archivo para reescritura.\n";
         }
     }
 
@@ -65,12 +65,12 @@ public:
         for (auto& prod : productos) {
             if (prod.nombre == nombre && prod.cantidad >= 0) {
                 if (nuevoPrecio < 0 || nuevaCantidad < 0) {
-                    cout << "Error: Precio o cantidad no pueden ser negativos.\n";
+                    cout << "\nError: Precio o cantidad no pueden ser negativos.\n";
                     return;
                 }
                 prod.precio = nuevoPrecio;
                 prod.cantidad = nuevaCantidad;
-                cout << "Producto " << nombre << " actualizado.\n";
+                cout << "\nProducto " << nombre << " actualizado.\n";
                 reescribirArchivo();  
                 return;
             }
@@ -128,6 +128,7 @@ public:
 
     void buscarProducto(const string& nombre) {
         for (const auto& prod : productos) {
+            cout << "\nBuscando producto: " << nombre << endl;
             if (prod.nombre == nombre && prod.cantidad >= 0) {
                 cout << "Producto encontrado: " << prod.nombre << ", Precio: " << prod.precio 
                      << ", Cantidad: " << prod.cantidad << "\n";
@@ -156,4 +157,3 @@ int main() {
 
     return 0;
 }
-
