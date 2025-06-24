@@ -34,12 +34,12 @@ public:
         for (auto& prod : productos) {
             if (prod.nombre == nombre && prod.cantidad >= 0) {
                 if (nuevoPrecio < 0 || nuevaCantidad < 0) {
-                    cout << "Error: Precio o cantidad no pueden ser negativos.\n";
+                    cout << "\nError: Precio o cantidad no pueden ser negativos.\n";
                     return;
                 }
                 prod.precio = nuevoPrecio;
                 prod.cantidad = nuevaCantidad;
-                cout << "Producto " << nombre << " actualizado.\n";
+                cout << "\nProducto " << nombre << " actualizado.\n";
                 return;
             }
         }
@@ -50,11 +50,11 @@ public:
         for (auto& prod : productos) {
             if (prod.nombre == nombre && prod.cantidad >= cantidadVendida) {
                 if (cantidadVendida < 0) {
-                    cout << "Error: Cantidad vendida no puede ser negativa.\n";
+                    cout << "\nError: Cantidad vendida no puede ser negativa.\n";
                     return;
                 }
                 prod.cantidad -= cantidadVendida;
-                cout << "Venta de " << cantidadVendida << " unidades de " << nombre << " realizada.\n";
+                cout << "\nVenta de " << cantidadVendida << " unidades de " << nombre << " realizada.\n";
                 return;
             }
         }
@@ -77,6 +77,7 @@ public:
     }
 
     void buscarProducto(const string& nombre) {
+        cout << "\nBuscando Producto: "<< nombre << endl;
         for (const auto& prod : productos) {
             if (prod.nombre == nombre && prod.cantidad >= 0) {
                 cout << "Producto encontrado: " << prod.nombre << ", Precio: " << prod.precio 
