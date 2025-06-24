@@ -1,16 +1,7 @@
-
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
 using namespace std;
-
-/* Escribe un programa en C++ que solicite al usuario 
-el nombre de un archivo de texto.
-Luego, lee el contenido del archivo 
-y muestra su contenido por pantalla. Si el archivo no
-existe, el programa debe mostrar un
-mensaje de error adecuado.
-*/
 
 int main()
 {
@@ -53,4 +44,3 @@ int main()
     }
     return 0;
 }
-
