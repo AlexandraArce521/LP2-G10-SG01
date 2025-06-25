@@ -55,31 +55,15 @@ public:
         cout << "Direccion: " << direccion << endl;
     }
     
-    void escribirArchivo(ofstream& archivo) {
-        size_t lenNombre = nombre.size();
-        size_t lenDireccion = direccion.size();
-    
-        archivo.write((char*)&lenNombre, sizeof(lenNombre));
-        archivo.write((char*)nombre.c_str(), lenNombre);
-    
-        archivo.write((char*)&edad, sizeof(edad));
-    
-        archivo.write((char*)&lenDireccion, sizeof(lenDireccion));
-        archivo.write((char*)direccion.c_str(), lenDireccion);
-    }
+    void escribirArchivo(ofstream& archivo) const {
+            archivo << nombre << "|" << edad << "|" << direccion << endl;
+        }
 
-    void leerArchivo(ifstream& archivo)  {
-        size_t lenNombre, lenDireccion;
-    
-        archivo.read((char*)&lenNombre, sizeof(lenNombre));
-        nombre.resize(lenNombre);
-        archivo.read(&nombre[0], lenNombre);
-    
-        archivo.read((char*)&edad, sizeof(edad));
-    
-        archivo.read((char*)&lenDireccion, sizeof(lenDireccion));
-        direccion.resize(lenDireccion);
-        archivo.read(&direccion[0], lenDireccion);
+    void leerArchivo(ifstream& archivo) {
+        getline(archivo, nombre, '|');
+        archivo >> edad;
+        archivo.ignore(); // Ignora el '|'
+        getline(archivo, direccion);
     }
 };
 
