@@ -4,7 +4,6 @@
 #include <vector>
 using namespace std;  
 
-
 class Persona{
 private:
     string nombre;
@@ -93,7 +92,6 @@ int main()
         Persona p = Persona("", 0, "");
         personasLeidas.push_back(p);
     }
-    
 
     // Mostrar las personas leídas
     for (auto& p : personasLeidas) {
