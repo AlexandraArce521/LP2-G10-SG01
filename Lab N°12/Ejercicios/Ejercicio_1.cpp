@@ -2,7 +2,6 @@
 #include <set>
 #include <vector>
 #include <algorithm>
-
 using namespace std;
 
 struct Producto {
@@ -12,7 +11,6 @@ struct Producto {
     int cantidad;
 };
 
-
 void mostrarLista(const Producto& p) {
         cout << "Nombre: " << p.nombre<< endl;
         cout << "Código: " << p.codigo << endl;
@@ -21,14 +19,12 @@ void mostrarLista(const Producto& p) {
         cout << endl;
 };
 
-
 int main()
 {
     string nuevoNombre;
     long codigoNuevo;
     string descripcionNuevo;
     int cantidadNuevo;
-    
     
     vector<Producto> productos;
     productos.push_back({"Laptop", 123456, "Laptop de última generación", 10});
@@ -45,7 +41,6 @@ int main()
     while(true) {
         
         int respuesta = 0;
-        
         for (auto& m: menu) {
             cout << m << endl;
         };
@@ -72,7 +67,6 @@ int main()
                     cout << "(!) Producto existente en el Inventario\n";
                     break;
                 }
-
                         cin.ignore();
 
                         cout << "Ingrese el nombre: ";
@@ -90,8 +84,7 @@ int main()
                         catch (...) {
                             cout << "(!) Error inesperado, intente más tarde\n";
                             break;
-                        }
-                        
+                        }       
                 break;
             } 
             
@@ -99,7 +92,6 @@ int main()
                 
                 cout << "Ingrese el codigo del producto: ";
                 cin >> codigoNuevo;
-                
                 
                 bool existe = false;
                 for( auto& prod : productos) {
@@ -110,21 +102,18 @@ int main()
                         prod.cantidad = cantidadNuevo;
                         existe = true;
                         break;
-                        
                     } 
                 }    
                 if(!existe) {
                     cout << "(!) Producto no encontrado. Intente de nuevo\n";
                     break;
                 }
-                
                 break;
             }
             
             case 3: {
                     cout << "Ingrese el codigo del producto: ";
                     cin >> codigoNuevo;
-                    
                     
                     bool existe = false;
                     for( auto& prod : productos) {
@@ -155,10 +144,7 @@ int main()
                     mostrarLista(prod);
                 }
             }
-            
         }//fin del switch
-        
-
         
     }// Fin del while
 
