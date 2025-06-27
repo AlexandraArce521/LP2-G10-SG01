@@ -144,6 +144,10 @@ int main()
                     mostrarLista(prod);
                 }
             }
+            case 5: {
+                cout << "Saliendo del Menú...\n";
+                return 0;                
+            }//fin de case 5
             default:{
                 cout << "(!) Opción inválida. Intente nuevamente.\n";
             }
