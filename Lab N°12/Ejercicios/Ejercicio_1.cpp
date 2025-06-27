@@ -50,15 +50,52 @@ int main()
         
         case 1:
             
-            long nuevoCodigo;
+            string nuevoNombre;
+            long codigoNuevo;
+            string descripcionNuevo;
+            int cantidadNuevo;
             
             cout << "Ingrese el codigo: ";
-            cin << nuevoCodigo;
+            cin >> codigoNuevo;
             
-            if(codigo.find(nuevoCodigo)) {
-                cout << "(!) EL codigo ingresado pertenece a otro producto\n"
+            bool existe = false;
+            for (const auto& prod : productos) {
+                if (prod.codigo == codigoNuevo) {
+                    existe = true;
+                    break;
+                }
+            }
+        
+            if (existe) {
+                cout << "(!) Producto existente en el Inventario\n";
                 break;
             }
+                    
+                    cout << "Ingrese el nombre: ";
+                    cin >> nuevoNombre;
+                    cin.ignore();
+                    
+                    cout << "Ingrese una descripcion: ";
+                    getline(cin, descripcionNuevo);
+                    cin.ignore();
+                    
+                    cout << "Ingrese la cantidad del producto nuevo: ";
+                    cin >> cantidadNuevo;
+                    cin.ignore();
+                    
+                    try{
+                        productos.push_back({nuevoNombre, codigoNuevo, descripcionNuevo, cantidadNuevo});
+                    }
+                    catch (...) {
+                        cout << "(!) Error inesperado, intente más tarde\n";
+                        break;
+                    }
+                    
+                
+                
+
+            
+            break;
     
     }
 
