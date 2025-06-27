@@ -171,7 +171,7 @@ int main()
             
             case 5: {
                 cout << "Saliendo del Menú...\n";
-                break;                
+                return 0;                
             }//fin de case 5
             
             default:{
