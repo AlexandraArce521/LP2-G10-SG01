@@ -144,6 +144,10 @@ int main()
                     mostrarLista(prod);
                 }
             }
+            default:{
+                cout << "(!) Opción inválida. Intente nuevamente.\n";
+            }
+
         }//fin del switch
         
     }// Fin del while
