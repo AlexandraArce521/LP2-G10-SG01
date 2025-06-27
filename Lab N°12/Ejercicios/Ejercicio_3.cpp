@@ -1,10 +1,7 @@
-
-
 #include <iostream>
 #include <set>
 #include <vector>
 #include <algorithm>
-
 using namespace std;
 
 struct Contacto {
@@ -29,7 +26,6 @@ int main()
     string nuevoCorreo;    
     
     vector<Contacto> contactos;
-    
     contactos.push_back({"Juan", 9878921345, "Juan@yahoo.com"});
     contactos.push_back({"Mariela", 932765623, "Mariela@hotmail.com"});
     contactos.push_back({"Vargas", 970810306, "Vargas@gmail.com"});
@@ -44,8 +40,7 @@ int main()
                             "____________________________________________________"};
     while (true) {
         
-        int respuesta = 0;
-        
+        int respuesta = 0;   
         for (auto& m: menu) {
             cout << m << endl;
         };
@@ -88,7 +83,6 @@ int main()
                 catch (...) {
                     cout << "(!) Error inesperado. Intente más tarde\n";
                 }
-               
                 break; //case 1  
             }//fin de case 1
             
@@ -111,9 +105,7 @@ int main()
                     cout << "(!) Contacto no encontrado\n";
                     break;
                 }
-                
                 break;//case 2
-                
             }// fin de case 2
 
             case 3: {
@@ -146,11 +138,7 @@ int main()
                     cout << "(!) Contacto no encontrado\n";
                     break;
                 }
-                
-
-
                 break;//case 3
-                
             }// fin case 3 
 
             case 4: {
@@ -164,7 +152,6 @@ int main()
                 for( auto& contac : contactos) {
                     mostrarContactos(contac);
                 }
-
                 break; //case 4
             }// fin case 4 
             
@@ -176,8 +163,6 @@ int main()
             default:{
                 cout << "(!) Opción inválida. Intente nuevamente.\n";
             }
-
-
         }//fin de switch case
     };
 
