@@ -1,25 +1,8 @@
-
-
 #include <iostream>
 #include <set>
 #include <vector>
 #include <algorithm>
-
 using namespace std;
-
-/*
-Problema: Organización de Eventos: 
-Un organizador de eventos necesita 
-un sistema para gestionar la lista 
-de asistentes a diferentes eventos. 
-Cada evento tiene un nombre, una fecha y una lista de asistentes. 
-El objetivo es desarrollar un programa que permita realizar 
-las siguientes operaciones: 
-a) Agregar un nuevo evento a la lista. 
-b) Agregar asistentes a un evento específico
-c) Mostrar la lista de asistentes de un evento en orden alfabético. 
-d) Buscar eventos por fecha. 
-*/
 
 struct Evento {
     string nombre;
@@ -45,8 +28,7 @@ void mostrarAsistentes(Evento& ev) {
 
 
 int main()
-{
-    
+{ 
     string nuevoNombre;
     string nuevaFecha;
     
@@ -66,7 +48,6 @@ int main()
     while (true) {
         
         int respuesta = 0;
-        
         for (auto& m: menu) {
             cout << m << endl;
         };
@@ -135,7 +116,6 @@ int main()
                             getline(cin, asistente);
                             ev.asistentes.insert(asistente); 
                         }
-            
                         cout << "Asistentes registrados correctamente.\n";
                         break; 
                     }
@@ -150,7 +130,6 @@ int main()
             case 3: {
                     cout << "Ingrese la fecha del evento: ";
                     cin >> nuevaFecha;
-                    
                     
                     bool existe = false;
                     for( auto& ev : eventos) {
@@ -172,7 +151,6 @@ int main()
             case 4: {
                     cout << "Ingrese la fecha del evento: ";
                     cin >> nuevaFecha;
-                    
                     
                     bool existe = false;
                     for( auto& ev : eventos) {
@@ -199,7 +177,6 @@ int main()
             default:{
                 cout << "(!) Opción inválida. Intente nuevamente.\n";
             }
-
 
         }//fin de switch case
     };
