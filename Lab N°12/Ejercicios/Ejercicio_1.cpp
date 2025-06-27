@@ -71,19 +71,18 @@ int main()
                     cout << "(!) Producto existente en el Inventario\n";
                     break;
                 }
-                        
-                        cout << "Ingrese el nombre: ";
-                        cin >> nuevoNombre;
+
                         cin.ignore();
-                        
+
+                        cout << "Ingrese el nombre: ";
+                        getline(cin, nuevoNombre);
+
                         cout << "Ingrese una descripcion: ";
                         getline(cin, descripcionNuevo);
-                        cin.ignore();
-                        
+
                         cout << "Ingrese la cantidad del producto nuevo: ";
                         cin >> cantidadNuevo;
-                        cin.ignore();
-                        
+
                         try{
                             productos.push_back({nuevoNombre, codigoNuevo, descripcionNuevo, cantidadNuevo});
                         }
