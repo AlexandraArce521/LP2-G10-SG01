@@ -18,6 +18,7 @@ void mostrarLista(const Producto& p) {
         cout << "Código: " << p.codigo << endl;
         cout << "Descripción: " << p.descripcion << endl;
         cout << "Cantidad: " << p.cantidad << endl;
+        cout << endl;
 };
 
 
