@@ -3,7 +3,33 @@
 #include <string>
 #include <algorithm>
 #include <map>
+#include <iomanip>
+#include <fstream>
+#include <sstream>
 using namespace std;
+
+bool validarNombre(const string& nombre) {
+    bool tieneLetra = false;
+
+    for (char c : nombre) {
+        if (isalpha(c)) {
+            tieneLetra = true;
+        } else if (!isspace(c)) {
+            throw invalid_argument("El nombre solo debe contener letras y espacios.");
+        }
+    }
+
+    if (!tieneLetra) {
+        throw invalid_argument("El nombre debe contener al menos una letra.");
+    }
+
+    return true;
+}
+
+template<typename T>
+bool compararPorSueldo(const T* a, const T* b) {
+    return *a < *b; // Usa operator< ya definido
+}
 
 // ========== Clase AFP y subclases ==========
 
@@ -46,7 +72,7 @@ public:
     AFPProfuturo() : AFP(10.0, 1.74, 1.69) {}
 };
 
-// ========== Clase Empresa (con punteros a trabajadores) ==========
+// ========== Clase Empresa ==========
 
 class UsuarioTrabajador;
 
@@ -73,7 +99,7 @@ public:
         trabajadores.push_back(emp);
     }
 
-    UsuarioTrabajador* buscarPorDni(string& dni);
+    UsuarioTrabajador* buscarPorDni(int& dni);
 
     string getNombre() { return nombre; }
 
@@ -81,6 +107,7 @@ public:
 };
 
 // ========== Clase Usuario ==========
+
 
 class Usuario {
 protected:
@@ -91,12 +118,14 @@ public:
     Usuario(string id = "", string pass = "") : userId(id), contrasenia(pass), sesionActiva(false) {}
 
     // Método para iniciar sesión
-    void iniciarSesion(const string& id, const string& pass) {
+    bool iniciarSesion(const string& id, const string& pass) {
         if (userId == id && contrasenia == pass) {
             sesionActiva = true;
             cout << "Sesión iniciada correctamente.\n";
+            return true;
         } else {
             cout << "Credenciales incorrectas.\n";
+            return false;
         }
     }
 
@@ -118,6 +147,7 @@ public:
     }
 
     string getUserId() const { return userId; }
+    string getContra(){return contrasenia;}
     bool estaEnSesion() const { return sesionActiva; }
     
 
@@ -130,27 +160,32 @@ public:
 class UsuarioTrabajador : public Usuario {
 protected:
     string nombre, celular;
-    string dni;
+    int dni;
     double sueldoBruto;
     int numHijos;
     AFP* afp;
     Empresa* empresa;
     static int asignacionFamiliar;
+    int inasistencias;
 
 public:
-    UsuarioTrabajador(string nom, string d, string cel, double sueldo, int hijos, AFP* a, Empresa* emp, string id, string pass)
-        : Usuario(id, pass), nombre(nom), dni(d), celular(cel), sueldoBruto(sueldo), numHijos(hijos), afp(a), empresa(emp) {}
+    UsuarioTrabajador(string nom, int d, string cel, double sueldo, int hijos, AFP* a, Empresa* emp, string id, string pass)
+        : Usuario(id, pass), nombre(nom), dni(d), celular(cel), sueldoBruto(sueldo), numHijos(hijos), afp(a), empresa(emp), inasistencias(0) {}
     
     
     void setAFP(AFP* a) { afp = a; }
     void setSueldo(double sueldo) { sueldoBruto = sueldo; }
     void setNumHijos(int hijos) { numHijos = hijos; }
+    void setInasistencias(int n) {inasistencias=n;}
+    int getInasistencias(){return inasistencias;}
+    string getName(){return nombre;}
     int getHijos(){return numHijos;}
 
     virtual double calcularSueldoNeto()  = 0;
     virtual string obtenerTipo()  = 0;
+    string getAfp() {return afp->obtenerTipo(); }
 
-    void actualizarDatos(string nom, string d, string cel) {
+    void actualizarDatos(string nom, int d, string cel) {
         nombre = nom; dni = d; celular = cel;
     }
 
@@ -169,8 +204,9 @@ public:
         cout << "AFP: "<<afp->obtenerTipo()<<endl; 
     }
 
-    string getDni() const { return dni; }
+    int getDni() const { return dni; }
     double getSueldo() const { return sueldoBruto; }
+    string getCelular() {return celular;}
     bool operator<(const UsuarioTrabajador& otro) {
         return sueldoBruto < otro.sueldoBruto;
     }    
@@ -186,7 +222,7 @@ class Gerente : public UsuarioTrabajador {
     string area;
 
 public:
-    Gerente(string nom, string d, string cel, double sueldo, int hijos, AFP* a, Empresa* e, string id, string pass, string area = "")
+    Gerente(string nom, int d, string cel, double sueldo, int hijos, AFP* a, Empresa* e, string id, string pass, string area = "")
         : UsuarioTrabajador(nom, d, cel, sueldo, hijos, a, e,id ,pass), area(area) {}
 
     double calcularSueldoNeto() override {
@@ -201,15 +237,14 @@ public:
 
     void mostrarDatos() override {
         UsuarioTrabajador::mostrarDatos();
-        cout << "area: " << area << "\nTipo: Gerente\n";
+        cout << "Departamento: " << area << "\nTipo: Gerente\n";
     }
-    
 
 };
 
 class Operario : public UsuarioTrabajador {
 public:
-    Operario(string nom, string d, string cel, double sueldo, int hijos, AFP* a, Empresa* e,string id, string pass)
+    Operario(string nom, int d, string cel, double sueldo, int hijos, AFP* a, Empresa* e,string id, string pass)
         : UsuarioTrabajador(nom, d, cel, sueldo, hijos, a, e, id ,pass) {}
 
     double calcularSueldoNeto() override {
@@ -228,28 +263,37 @@ public:
 
 // ========== Clase UsuarioAdministrador (con puntero a Empresa) ==========
 
-
-
 // ========== Clase Boleta ==========
-
+template <typename T>
 class Boleta {
-    UsuarioTrabajador* empleado;
+    T* empleado;
     float sueldoNeto;
     float descuentos;
     int inasistencias;
     vector <int> faltas;
 
 public:
-    Boleta(UsuarioTrabajador* emp, int faltas) : empleado(emp), inasistencias(faltas) {
+    Boleta(T* emp, int faltas) : empleado(emp), inasistencias(faltas) {
         descuentos = empleado->calcularDescuento();
-        sueldoNeto = empleado->calcularSueldoNeto() - (faltas * 20);
+        sueldoNeto = empleado->calcularSueldoNeto() - (empleado->getInasistencias()* 20);
     }
+
+    string getNombre() const { return empleado->getName(); }
+    int getDni() const { return empleado->getDni(); }
+    string getTipo() const { return empleado->obtenerTipo(); }
+    string getTipoAfp() const { return empleado->getAfp(); }
+    double getSueldoBruto() const { return empleado->getSueldo(); }
+    double getDescuentoAFP() const { return descuentos; }
+    double getSueldoNeto() const { return sueldoNeto; }
+    int getFaltas() const { return empleado->getInasistencias(); }
+    int getHijos() const { return empleado->getHijos(); }
+    string getAFP() const { return empleado->calcularDescuento() > 0 ? "Sí" : "No"; }
 
     void mostrar() {
         cout << "=== BOLETA DE PAGO ===\n";
         empleado->mostrarDatos();
 
-        cout << "Inasistencias: " << inasistencias
+        cout << "Inasistencias: " << empleado->getInasistencias()
              << "\nDescuentos por afp: S/" << descuentos<<endl;
 
         if (empleado->getHijos()>0) {
@@ -264,47 +308,95 @@ public:
 // ========== Clase Nomina ==========
 
 class Nomina {
-    vector<Boleta> boletas;
+    vector<Boleta<UsuarioTrabajador>> boletas;
     map<string, int> inasistencias;
     
 
 public:
     void generarParaTodos( vector<UsuarioTrabajador*>& trabajadores) {
-        int n;
-        n=trabajadores.size();
-        string dni;
-        int faltas;
-        for (int  i = 0; i <n; ++i) {
-            dni=trabajadores[i]->getDni();
-            faltas=inasistencias[dni];
-            Boleta b(trabajadores[i], faltas);
+        boletas.clear();  // MUY IMPORTANTE para evitar duplicados y reiniciar
+        for (auto& t : trabajadores) {
+            Boleta<UsuarioTrabajador> b(t, t->getInasistencias());
             boletas.push_back(b);
         }
     }
     
+    const vector<Boleta<UsuarioTrabajador>>& getBoletas() const {
+        return boletas;
+    }
+
     void registrarFaltas(string dni, int cantidad) {
         inasistencias[dni] = cantidad;
     }
 
     void mostrarNomina() {
-        for ( Boleta& b : boletas) {
-            b.mostrar();
-            cout << "--------------------\n";
-        }
+    cout << "\n============================================= NÓMINA DE TRABAJADORES ===============================================\n";
+    cout << left;
+    cout.width(15); cout << "NOMBRE";
+    cout.width(12); cout << "DNI";
+    cout.width(10); cout << "TIPO";
+    cout.width(15); cout << "AFP";
+    cout.width(10); cout << "FALTAS";
+    cout.width(15); cout << "SUELDO BRUTO";
+    cout.width(10); cout << "HIJOS";
+    cout.width(12); cout << "DESCUENTO";
+    cout.width(14); cout << "ASIG.FAM.";
+    cout.width(14); cout << "SUELDO NETO";
+    cout << "\n-----------------------------------------------------------------------------------------------------------------\n";
+
+    for (Boleta<UsuarioTrabajador>& b: boletas) {
+        cout.width(15); cout << b.getNombre();
+        cout.width(12); cout << b.getDni();
+        cout.width(10); cout << b.getTipo();
+        cout.width(15); cout << b.getTipoAfp();
+        cout.width(10); cout << b.getFaltas();
+        cout.width(15); cout << fixed << setprecision(2) << b.getSueldoBruto();
+        cout.width(10); cout << b.getHijos();
+        cout.width(12); cout << fixed << setprecision(2) << b.getDescuentoAFP();
+        cout.width(14); cout << (b.getHijos() > 0 ? "133.00" : "0.00");
+        cout.width(14); cout << fixed << setprecision(2) << b.getSueldoNeto();
+        cout << "\n";
     }
+    cout << "====================================================================================================================\n";
+}
 };
+void guardarNomina(const Nomina& nomina) {
+    ofstream file("nomina.txt");
+    file << left;
+    file << setw(15) << "NOMBRE" << setw(12) << "DNI" << setw(10) << "TIPO"
+         << setw(15) << "AFP" << setw(10) << "FALTAS"
+         << setw(15) << "SUELDO BRUTO" << setw(10) << "HIJOS"
+         << setw(12) << "DESCUENTO" << setw(14) << "ASIG.FAM." << setw(14) << "SUELDO NETO" << "\n";
+    file << string(120, '-') << "\n";
+
+    for (const Boleta<UsuarioTrabajador>& b : nomina.getBoletas()) {
+        file << setw(15) << b.getNombre()
+             << setw(12) << b.getDni()
+             << setw(10) << b.getTipo()
+             << setw(15) << b.getTipoAfp()
+             << setw(10) << b.getFaltas()
+             << setw(15) << fixed << setprecision(2) << b.getSueldoBruto()
+             << setw(10) << b.getHijos()
+             << setw(12) << fixed << setprecision(2) << b.getDescuentoAFP()
+             << setw(14) << (b.getHijos() > 0 ? "133.00" : "0.00")
+             << setw(14) << b.getSueldoNeto()
+             << "\n";
+    }
+    file.close();
+}
 
 class UsuarioAdministrador : public Usuario {
 private:
-    string nombre, dni;
+    string nombre; 
+    int dni;
     Empresa* empresa;
     UsuarioTrabajador* trabajador;
 
 public:
-    UsuarioAdministrador(string nom, string d, string id, string pass, Empresa* emp)
+    UsuarioAdministrador(string nom, int d, string id, string pass, Empresa* emp)
         : Usuario(id, pass), nombre(nom), dni(d), empresa(emp) {}
 
-    void setDatos( string nom,  string d) {
+    void setDatos( string nom,  int d) {
         nombre = nom;
         dni = d;
         cout<<"cambios hechos..."<<endl;
@@ -317,11 +409,11 @@ public:
         cout<<"\nDatos actualizados correctamente..."<<endl;
     }
 
-    void generarReporteGeneral(Nomina nom)  {
+    void generarReporteGeneral(Nomina& nom)  {
         cout << "=== REPORTE GENERAL ===\n";
         nom.generarParaTodos(empresa->getTrabajadores());
         nom.mostrarNomina();
-        
+        guardarNomina(nom);
     }
 
     void actualizarDatosEmpresa() {
@@ -338,7 +430,7 @@ public:
 
     void ReporteDni(UsuarioTrabajador* t){
         if (t) {
-            Boleta b(t, 0);
+            Boleta<UsuarioTrabajador> b(t, t->getInasistencias());
             b.mostrar();
         }
         else{
@@ -346,9 +438,9 @@ public:
         }
     }
 
-    void SueldoMes(UsuarioTrabajador* t, int faltas){
+    void SueldoMes(UsuarioTrabajador* t){
         if (t) {
-            Boleta b(t, faltas);
+            Boleta<UsuarioTrabajador> b(t, t->getInasistencias());
             b.mostrar();
         }
         else{
@@ -365,10 +457,7 @@ public:
         }
 
         vector<UsuarioTrabajador*> copiaTrabajadores = trabajadores;
-        sort(copiaTrabajadores.begin(), copiaTrabajadores.end(),
-             [](const UsuarioTrabajador* a, const UsuarioTrabajador* b) {
-                 return *a < *b;
-             });
+        sort(copiaTrabajadores.begin(), copiaTrabajadores.end(), compararPorSueldo<UsuarioTrabajador>);
 
         cout << "\n--- Sueldos de empleados (de mayor a menor) ---\n";
         for ( auto* emp : copiaTrabajadores) {
@@ -376,12 +465,16 @@ public:
             cout << "Sueldo Neto: S/" << emp->calcularSueldoNeto() << "\n--------------------\n";
         }
     }
+    string getNombre(){return nombre;}
+    int getDni(){return dni;}
 
 };
-
+void guardarNomina(const Nomina& nomina);
+void guardarTrabajadores(const map<string, UsuarioTrabajador*>& trabajadores);
+void guardarAdministradores(const map<string, UsuarioAdministrador*>& admins);
 // ========== Implementación de búsqueda en Empresa ==========
 
-UsuarioTrabajador* Empresa::buscarPorDni(string& dni) {
+UsuarioTrabajador* Empresa::buscarPorDni(int& dni) {
     for (auto t : trabajadores) {
         if (t->getDni() == dni)
             return t;
@@ -390,20 +483,85 @@ UsuarioTrabajador* Empresa::buscarPorDni(string& dni) {
 }
 
 UsuarioTrabajador* registrarTrabajador(Empresa* empresa, map<string, UsuarioTrabajador*>& usuariosTrabajadores, string id, string pass) {
-    string nombre, dni, celular, afpTipo;
+    string nombre, celular, afpTipo;
     double sueldo;
+    string entradaSueldo;
+    string entradaHijos;
+    string entradaDNI;
+    int dni;
     int hijos;
 
-    cout << "Nombre: "; cin >> nombre;
-    cout << "DNI: "; cin >> dni;
+    
+    while (true) {
+        cout << "Nombre: ";
+        cin.ignore();
+        getline(cin, nombre); 
+        try {
+            validarNombre(nombre);
+            break;
+        } catch (const invalid_argument& e) {
+            cout << "Error: " << e.what() << endl;
+        }
+    }
+    cout << "Nombre aceptado"  << endl;
+    
+    while (true) {
+        cout << "DNI: ";
+        cin >> entradaDNI;
+    
+        try {
+            if (entradaDNI.length() != 8)
+                throw invalid_argument("El DNI debe tener exactamente 8 dígitos.");
+    
+            for (char c : entradaDNI) {
+                if (!isdigit(c)) {
+                    throw invalid_argument("El DNI solo debe contener dígitos.");
+                }
+            }
+            dni = stoi(entradaDNI);
+            break;
+    
+        } catch (const invalid_argument& e) {
+            cout << "Error: " << e.what() << endl;
+        } catch (const out_of_range& e) {
+            cout << "Error: El número ingresado es demasiado grande.\n";
+        }
+    }
     cout << "Celular: "; cin >> celular;
-    do{
-    cout << "Sueldo Bruto: "; cin >> sueldo;
-    }while (sueldo<0);
+    
+    while(true) {
+        cout << "Sueldo Bruto: "; 
+        cin >> entradaSueldo; 
+        try {
+            sueldo = stod(entradaSueldo);
+            if (sueldo < 0) {
+                cout << "La cantidad no puede ser negativa.\n";
+                continue;                
+            }
+            break;
+        } catch (const invalid_argument& e) {
+            cout << "Entrada no válida. Ingrese un número entero.\n";
+        } catch (const out_of_range& e) {
+            cout << "Número fuera de rango.\n";
+        }
+    }
 
-    do{
-    cout << "Nro de hijos: "; cin >> hijos;
-    }while (hijos<0);
+    while (true) {
+        cout << "Nuevo nro de hijos: ";
+        cin >> entradaHijos;
+        try {
+            hijos = stoi(entradaHijos);
+            if (hijos < 0) {
+                cout << "La cantidad no puede ser negativa.\n";
+                continue;
+            }
+            break; // entrada válida
+        } catch (const invalid_argument& e) {
+            cout << "Entrada no válida. Ingrese un número entero.\n";
+        } catch (const out_of_range& e) {
+            cout << "Número fuera de rango.\n";
+        }
+    }
 
     cout << "AFP (Integra, Prima, Profuturo): "; cin >> afpTipo;
 
@@ -424,32 +582,237 @@ UsuarioTrabajador* registrarTrabajador(Empresa* empresa, map<string, UsuarioTrab
         Operario* nuevo = new Operario(nombre, dni, celular, sueldo, hijos, afp, empresa, id, pass);
         empresa->agregarEmpleado(nuevo);
         usuariosTrabajadores[id] = nuevo;
+        guardarTrabajadores(usuariosTrabajadores);
         return nuevo;
     }
     else if (op==2){
-        cout<<"area: ";
+        cout<<"Departamento (ejm. finanzas): ";
         string ar;
         cin>>ar;
         Gerente* nuevo = new Gerente(nombre, dni, celular, sueldo, hijos, afp, empresa, id, pass, ar);
         empresa->agregarEmpleado(nuevo);
         usuariosTrabajadores[id] = nuevo;
+        guardarTrabajadores(usuariosTrabajadores);
         return nuevo;
     }
 
     return nullptr;
 }
 
-UsuarioAdministrador* registrarAdministrador(Empresa* empresa, map<string, UsuarioAdministrador*>& admins) {
-    string nombre, dni, id, pass;
+UsuarioAdministrador* registrarAdministrador(Empresa* empresa, map<string, UsuarioAdministrador*>& admins, string id, string pass) {
+    string nombre; 
+    int dni;
     cout << "Registro de administrador\n";
     cout << "Nombre: "; cin >> nombre;
     cout << "DNI: "; cin >> dni;
-    cout << "Usuario: "; cin >> id;
-    cout << "Contrasenia: "; cin >> pass;
 
     UsuarioAdministrador* admin = new UsuarioAdministrador(nombre, dni, id, pass, empresa);
     admins[id] = admin;
+    guardarAdministradores(admins);
+
     return admin;
+}
+
+void guardarTrabajadores(const map<string, UsuarioTrabajador*>& trabajadores) {
+    ofstream file("trabajadores.txt");
+    for (const auto& par : trabajadores) {
+        string id = par.first;
+        UsuarioTrabajador* t = par.second;
+        file << id << "|" << t->getContra() << "|" << t->getDni() << "|" << t->getName() << "|"<< t->getCelular()<< "|"
+             << t->getSueldo() << "|" << t->getHijos() << "|" << t->getAfp() << "|" 
+             << t->getInasistencias() << "|" << t->obtenerTipo() << "\n";
+    }
+    file.close();
+}
+
+void guardarAdministradores(const map<string, UsuarioAdministrador*>& admins) {
+    ofstream file("administradores.txt");
+    for (const auto& par : admins) {
+        string id = par.first;
+        UsuarioAdministrador* admin = par.second;
+        file << id << "|" << admin->getContra() << "|" << admin->getNombre() <<"|" << admin->getDni() <<"\n";
+    }
+    file.close();
+}
+
+
+void cargarTrabajadores(Empresa* empresa, map<string, UsuarioTrabajador*>& trabajadores) {
+    ifstream file("trabajadores.txt");
+    if (!file.is_open()) return;
+
+    string linea;
+    while (getline(file, linea)) {
+        stringstream ss(linea);
+        string id, pass, nombre, celular, afpTipo, tipo, dniStr;
+        double sueldo;
+        int hijos, faltas, dni;
+
+        getline(ss, id, '|');
+        getline(ss, pass, '|');
+        getline(ss, dniStr, '|');
+        getline(ss, nombre, '|');
+        getline(ss, celular, '|');
+        ss >> sueldo; ss.ignore();
+        ss >> hijos; ss.ignore();
+        getline(ss, afpTipo, '|');
+        ss >> faltas; ss.ignore();
+        getline(ss, tipo);
+
+        try {
+            dni = stoi(dniStr); 
+        } catch (...) {
+            cout << "(!) DNI inválido en archivo: " << dniStr << endl;
+            continue;
+        }
+
+        AFP* afp = nullptr;
+        if (afpTipo == "AFP Integra") afp = new AFPIntegra();
+        else if (afpTipo == "AFP Prima") afp = new AFPPrima();
+        else if (afpTipo == "AFP Profuturo") afp = new AFPProfuturo();
+
+        UsuarioTrabajador* t = nullptr;
+        if (tipo == "Operario")
+            t = new Operario(nombre, dni, celular, sueldo, hijos, afp, empresa, id, pass);
+        else if (tipo == "Gerente")
+            t = new Gerente(nombre, dni, celular, sueldo, hijos, afp, empresa, id, pass, "");
+
+        if (t) {
+            t->setInasistencias(faltas);
+            trabajadores[id] = t;
+            empresa->agregarEmpleado(t);
+        }
+    }
+
+    file.close();
+}
+
+void cargarAdministradores(Empresa* empresa, map<string, UsuarioAdministrador*>& admins) {
+    ifstream file("administradores.txt");
+    if (!file.is_open()) return;
+    string linea;
+    while (getline(file, linea)) {
+        stringstream ss(linea);
+        string id, pass, nombre, dniStr;
+        int dni;
+        getline(ss, id, '|');
+        getline(ss, pass,'|');
+        getline(ss, nombre, '|');
+        getline(ss, dniStr);
+
+    try {
+        dni = stoi(dniStr);
+    } catch (...) {
+        cout << "(!) DNI inválido para administrador: " << dniStr << endl;
+        continue;
+    }
+
+    UsuarioAdministrador* admin = new UsuarioAdministrador(nombre, dni, id, pass, empresa);
+    admins[id] = admin;
+    }
+    file.close();
+}
+
+
+void menuTrabajador(UsuarioTrabajador* t, map<string, UsuarioTrabajador*>& usuariosTrabajadores){
+    if (t->estaEnSesion()) {
+        int opcion;
+        do {
+            cout << "\n1. Actualizar datos\n2. Consultar boleta\n3. Salir\nOpcion: ";
+            cin >> opcion;
+            if (opcion == 1) {
+                string nombre, celular, afpTipo;
+                int hijos, dni;
+                cout << "Nuevo nombre: "; cin >> nombre;
+                cout << "Nuevo DNI: "; cin >> dni;
+                cout << "Nuevo celular: "; cin >> celular;
+                do{
+                    cout << "Nuevo nro de hijos: "; cin >> hijos;
+                } while (hijos<0);
+                cout << "Nueva AFP (Integra, Prima, Profuturo): "; cin >> afpTipo;
+
+                AFP* afp = nullptr;
+                if (afpTipo == "Integra") afp = new AFPIntegra();
+                else if (afpTipo == "Prima") afp = new AFPPrima();
+                else if (afpTipo == "Profuturo") afp = new AFPProfuturo();
+
+                t->actualizarDatos(nombre, dni, celular);
+                t->setNumHijos(hijos);
+                t->setAFP(afp);
+                guardarTrabajadores(usuariosTrabajadores); 
+
+                cout<<"Datos actualizados exitosamente..."<<endl;
+            } else if (opcion == 2) {
+                Boleta<UsuarioTrabajador> b(t, t->getInasistencias());
+                b.mostrar();
+            }
+        } while (opcion != 3);
+    }
+    return;
+}
+
+void menuAdmin(UsuarioAdministrador* admin, Nomina& n, Empresa& empresa, map<string, UsuarioTrabajador*>& usuariosTrabajadores){
+    if (admin->estaEnSesion()) {
+        int op2;
+        do {
+            cout << "\n1. Actualizar datos de empleado\n2. Actualizar empresa\n3. Reportes\n4. Mostrar sueldos ordenados\n5. Salir\nOpcion: ";
+            cin >> op2;
+            if (op2 == 1) {
+                int dni;
+                cout << "DNI del empleado a actualizar: ";
+                cin >> dni;
+                UsuarioTrabajador* t = empresa.buscarPorDni(dni);
+                if (t) admin->actualizarDatosEmpleado(t);
+                else cout << "No se encontro empleado.\n";
+                guardarTrabajadores(usuariosTrabajadores);
+
+                cout<<"Datos actualizados exitosamente..."<<endl;
+            } else if (op2 == 2) {
+                admin->actualizarDatosEmpresa();
+
+            } else if (op2 == 3) {
+                while (true){
+                    int r;
+                    cout << "\n1. Nomina completa\n2. Boleta por DNI\n3. Sueldo neto por mes (con faltas)\n4. Volver\nOpcion: ";
+                    cin >> r;
+                    if (r == 1) {
+                        admin->generarReporteGeneral(n);
+                    } else if (r == 2) {
+                        int dni;
+                        cout << "DNI: "; cin >> dni;
+                        UsuarioTrabajador* t = empresa.buscarPorDni(dni);
+                        if (t){
+                            admin->ReporteDni(t);
+                        }
+                        else{
+                            cout<<"dni no encontrado..."<<endl;
+                        }
+                            
+                    } else if (r == 3) {
+                        int dni;
+                        int faltas;
+                        cout << "DNI: "; cin >> dni;
+                        UsuarioTrabajador* t = empresa.buscarPorDni(dni);
+                        if (t){
+                            cout << "Inasistencias: "; cin >> faltas;
+                            t->setInasistencias(faltas);
+                            admin->SueldoMes(t);
+                            guardarTrabajadores(usuariosTrabajadores);
+                            cout<<"Datos actualizados exitosamente..."<<endl;
+                        }
+                        else{
+                            cout<<"dni no encontrado..."<<endl;
+                        }
+                        
+                    }else if (r==4){
+                        break;
+                    }
+                }
+            } else if (op2 == 4) {
+                admin->mostrarSueldosOrdenados();
+            }
+        } while (op2 != 5);     
+    }
+    return;
 }
 
 int main() {
@@ -457,172 +820,103 @@ int main() {
     Nomina n;
     map<string, UsuarioTrabajador*> trabajadores;
     map<string, UsuarioAdministrador*> administradores;
-    
-    vector <string> menu = {"\n____________________________________________________",
+
+    cargarTrabajadores(&empresa, trabajadores);
+    cargarAdministradores(&empresa, administradores);
+
+    vector <string> menu = {"\n__________________",
                                 "1. Inciar sesion como Trabajador",
                                 "2. Iniciar sesion como Administrador",
                                 "3. Salir",
-                                "____________________________________________________\n"
+                                "__________________\n"
                                 };
-                                
-    int opcion;
-    
+
     while (true) {
-        
-        try {
+ 
+         try {
             for (auto& m: menu) {
                 cout << m << endl;
             };
             
+            int opcion;
             string respuesta;
-            
+
             cout << "Elegir una opción: ";
             cin >> respuesta;
             
             opcion = stoi(respuesta);
             
-            switch (opcion) {
-            case 1:{
-                string id, pass;
-                cout << "Usuario: "; cin >> id;
-                cout << "Contrasenia: "; cin >> pass;
+            switch(opcion) {
     
-                UsuarioTrabajador* t;
-                if (trabajadores.count(id)) {
-                    t = trabajadores[id];
-                } else {
-                    cout << "Usuario no registrado. Procediendo a registrar.\n";
+                case 1: {
+                    string id, pass;
                     cout << "Usuario: "; cin >> id;
                     cout << "Contrasenia: "; cin >> pass;
-                    t = registrarTrabajador(&empresa, trabajadores, id, pass);
+        
+                    UsuarioTrabajador* t;
+                    if (trabajadores.count(id)) {
+                        t = trabajadores[id];
+                    } else {
+                        cout << "Usuario no registrado. Procediendo a registrar.\n";
+                        cout << "Usuario: "; cin >> id;
+                        cout << "Contrasenia: "; cin >> pass;
+                        t = registrarTrabajador(&empresa, trabajadores, id, pass);
+                    }
+                        
+                    if (t->iniciarSesion(id, pass)){
+                        menuTrabajador(t,trabajadores);
+                    }
+                    else{
+                        do{
+                        cout << "Usuario: "; cin >> id;
+                        cout << "Contrasenia: "; cin >> pass;
+                        }while (t->iniciarSesion(id, pass)==false);
+                        menuTrabajador(t,trabajadores);
+                    }
                 }
-                    
-    
-                t->iniciarSesion(id, pass);
-                if (t->estaEnSesion()) {
-                    int opcion;
-                    do {
-                        cout << "\n1. Actualizar datos\n2. Consultar boleta\n3. Salir\nOpcion: ";
-                        cin >> opcion;
-                        if (opcion == 1) {
-                            string nombre, dni, celular, afpTipo;
-                            double sueldo; int hijos;
-                            cout << "Nuevo nombre: "; cin >> nombre;
-                            cout << "Nuevo DNI: "; cin >> dni;
-                            cout << "Nuevo celular: "; cin >> celular;
-                            do{
-                            cout << "Nuevo sueldo: "; cin >> sueldo;
-                            } while (sueldo<0);
-    
-                            do{
-                            cout << "Nuevo nro de hijos: "; cin >> hijos;
-                            } while (hijos<0);
-                            cout << "Nueva AFP (Integra, Prima, Profuturo): "; cin >> afpTipo;
-    
-                            AFP* afp = nullptr;
-                            if (afpTipo == "Integra") afp = new AFPIntegra();
-                            else if (afpTipo == "Prima") afp = new AFPPrima();
-                            else if (afpTipo == "Profuturo") afp = new AFPProfuturo();
-    
-                            t->actualizarDatos(nombre, dni, celular);
-                            t->setSueldo(sueldo);
-                            t->setNumHijos(hijos);
-                            t->setAFP(afp);
-                        } else if (opcion == 2) {
-                            Boleta b(t, 0);
-                            b.mostrar();
-                        }
-                    } while (opcion != 3);
-                }
+        
+                case 2: {
+                    string id, pass;
+                    cout << "Usuario: "; cin >> id;
+                    cout << "Contrasenia: "; cin >> pass;
+        
+                    UsuarioAdministrador* admin;
+                    if (administradores.count(id)) {
+                        admin = administradores[id];
+                    } else {
+                        cout << "Administrador no registrado. Procediendo a registrar.\n";
+                        cout << "Usuario: "; cin >> id;
+                        cout << "Contrasenia: "; cin >> pass;
+                        admin = registrarAdministrador(&empresa, administradores,id, pass);
+                    }
+        
+                    if (admin->iniciarSesion(id, pass)){
+                        menuAdmin(admin,n,empresa,trabajadores);
+                    }
+                    else{
+                        do{
+                        cout << "Usuario: "; cin >> id;
+                        cout << "Contrasenia: "; cin >> pass;
+                        }while (admin->iniciarSesion(id, pass)==false);
+                        menuAdmin(admin,n,empresa,trabajadores);
+                    }
+                } 
+               case 3: {
+                    cout << "Saliendo del sistema...\n";
+                    return 0;
+                };// fin de case 3  
                 
-                break;
-            };
-            case 2: {
-                string id, pass;
-                cout << "Usuario: "; cin >> id;
-                cout << "Contrasenia: "; cin >> pass;
-    
-                UsuarioAdministrador* admin;
-                if (administradores.count(id)) {
-                    admin = administradores[id];
-                } else {
-                    cout << "Administrador no registrado. Procediendo a registrar.\n";
-                    admin = registrarAdministrador(&empresa, administradores);
+                default: {
+                    cout << "(!) Número fuera de rango.\n";
                 }
-    
-                admin->iniciarSesion(id, pass);
-                if (admin->estaEnSesion()) {
-                    int op2;
-                    do {
-                        cout << "\n1. Actualizar datos de empleado\n2. Actualizar empresa\n3. Reportes\n4. Mostrar sueldos ordenados\n5. Salir\nOpcion: ";
-                        cin >> op2;
-                        if (op2 == 1) {
-                            string dni;
-                            cout << "DNI del empleado a actualizar: ";
-                            cin >> dni;
-                            UsuarioTrabajador* t = empresa.buscarPorDni(dni);
-                            if (t) admin->actualizarDatosEmpleado(t);
-                            else cout << "No se encontro empleado.\n";
-                        } else if (op2 == 2) {
-                            admin->actualizarDatosEmpresa();
-                        } else if (op2 == 3) {
-                            while (true){
-                            int r;
-                            cout << "\n1. Nomina completa\n2. Boleta por DNI\n3. Sueldo neto por mes (con faltas)\n4. Volver\nOpcion: ";
-                            cin >> r;
-                            if (r == 1) {
-                                admin->generarReporteGeneral(n);
-                            } else if (r == 2) {
-                                string dni;
-                                cout << "DNI: "; cin >> dni;
-                                UsuarioTrabajador* t = empresa.buscarPorDni(dni);
-                                if (t){
-                                admin->ReporteDni(t);
-                                }
-                                else{
-                                    cout<<"dni no encontrado..."<<endl;
-                                }
-                                
-                            } else if (r == 3) {
-                                string dni;
-                                int faltas;
-                                cout << "DNI: "; cin >> dni;
-                                UsuarioTrabajador* t = empresa.buscarPorDni(dni);
-                                if (t){
-    
-                                cout << "Inasistencias: "; cin >> faltas;
-                                n.registrarFaltas(dni, faltas);
-                                admin->SueldoMes(t,faltas);}
-                                else{
-                                    cout<<"dni no encontrado..."<<endl;
-                                }
-                                
-                            }else if (r==4){
-                                break;
-                            }
-                          }
-                        } else if (op2 == 4) {
-                            admin->mostrarSueldosOrdenados();
-                        }
-                    } while (op2 != 5);
-                }
-                break;
-            };//fin del case 2 
-            case 3: {
-                cout << "Saliendo del sistema...\n";
-                return 0;
-            };// fin de case 3  
-            
-            default: {
-                cout << "Opcion no valida\n";
-            }
-            }; // fin del switch case
+            };//fin del switch case
             
         } catch (invalid_argument&) {
             cout << "(!) Entrada no válida. Ingrese un número.\n";
+            
         } catch (out_of_range&) {
             cout << "(!) Número fuera de rango.\n";
-        }    
+        }  
     }
     return 0;
 }
