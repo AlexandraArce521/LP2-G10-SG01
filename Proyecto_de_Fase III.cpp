@@ -130,7 +130,7 @@ public:
 class UsuarioTrabajador : public Usuario {
 protected:
     string nombre, celular;
-    int dni;
+    string dni;
     double sueldoBruto;
     int numHijos;
     AFP* afp;
@@ -138,7 +138,7 @@ protected:
     static int asignacionFamiliar;
 
 public:
-    UsuarioTrabajador(string nom, int d, string cel, double sueldo, int hijos, AFP* a, Empresa* emp, string id, string pass)
+    UsuarioTrabajador(string nom, string d, string cel, double sueldo, int hijos, AFP* a, Empresa* emp, string id, string pass)
         : Usuario(id, pass), nombre(nom), dni(d), celular(cel), sueldoBruto(sueldo), numHijos(hijos), afp(a), empresa(emp) {}
     
     
