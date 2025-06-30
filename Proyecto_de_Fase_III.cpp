@@ -24,6 +24,14 @@ bool validarLetra(const string& nombre) {
     return true;
 }
 
+class InasistenciaInvalidaException : public exception {
+private:
+    string mensaje;
+public:
+    explicit InasistenciaInvalidaException(const string& m) : mensaje(m) {}
+    const char* what() const noexcept override { return mensaje.c_str(); }
+};
+
 bool validarDni(const string& dni) {
     if (dni.length() != 8)
         throw invalid_argument("El DNI debe tener exactamente 8 dígitos.");
@@ -435,10 +443,47 @@ public:
     } 
 
     void actualizarDatosEmpleado(UsuarioTrabajador* emp) {
+        string entradaSueldo;
         double sueldo;
-        cout << "Nuevo sueldo: "; cin >> sueldo;
+    
+        while (true) {
+            cout << "Nuevo sueldo: ";
+            cin >> entradaSueldo;
+    
+            try {
+                if (entradaSueldo.empty()) {
+                    throw invalid_argument("Debe ingresar un valor.");
+                }
+    
+                bool puntoEncontrado = false;
+                for (char c : entradaSueldo) {
+                    if (c == '.') {
+                        if (puntoEncontrado) {
+                            throw invalid_argument("Formato inválido: hay más de un punto decimal.");
+                        }
+                        puntoEncontrado = true;
+                    } else if (!isdigit(c)) {
+                        throw invalid_argument("El sueldo solo debe contener números (y como máximo un punto decimal).");
+                    }
+                }
+    
+                sueldo = stod(entradaSueldo);
+    
+                if (sueldo <= 0) {
+                    throw invalid_argument("El sueldo debe ser mayor a 0.");
+                }
+    
+                break;
+    
+            } catch (const invalid_argument& e) {
+                cout << "Error: " << e.what() << endl;
+            } catch (...) {
+                cout << "Error inesperado. Intente nuevamente.\n";
+            }
+        }
+    
         emp->setSueldo(sueldo);
-        cout<<"\nDatos actualizados correctamente..."<<endl;
+        cout << "\nDatos actualizados correctamente..." << endl;
     }
 
     void generarReporteGeneral(Nomina& nom)  {
@@ -452,8 +497,27 @@ public:
         string nuevoNombre, nuevoRuc, nuevaDir;
         cout << "Ingrese nuevo nombre de empresa: ";
         cin>> nuevoNombre;
-        cout << "Ingrese nuevo RUC: ";
-        cin>>nuevoRuc;
+        
+        while (true) {
+            cout << "Ingrese nuevo RUC: ";
+            cin >> nuevoRuc;
+    
+            try {
+                if (nuevoRuc.length() != 9) {
+                    throw invalid_argument("El RUC debe tener exactamente 9 dígitos.");
+                }
+    
+                for (char c : nuevoRuc) {
+                    if (!isdigit(c)) {
+                        throw invalid_argument("El RUC solo debe contener números.");
+                    }
+                }
+                break; 
+    
+            } catch (const invalid_argument& e) {
+                cout << "Error: " << e.what() << endl;
+            }
+        }
         cout << "Ingrese nueva dirección: ";
         cin>>nuevaDir;
 
@@ -534,6 +598,7 @@ UsuarioTrabajador* Empresa::buscarPorDni(string& dni) {
     }
     return nullptr;
 }
+
 UsuarioTrabajador* registrarTrabajador(Empresa* empresa, map<string, UsuarioTrabajador*>& usuariosTrabajadores, string id, string pass) {
     string nombre, dni, celular, afpTipo, entradaSueldo, entradaHijos;
     double sueldo;
@@ -560,6 +625,7 @@ UsuarioTrabajador* registrarTrabajador(Empresa* empresa, map<string, UsuarioTrab
             cout << "Error: " << e.what() << endl;
         }
     }
+    
     while (true) {
         cout << "Celular: ";
         getline(cin, celular);
@@ -572,7 +638,7 @@ UsuarioTrabajador* registrarTrabajador(Empresa* empresa, map<string, UsuarioTrab
                     throw CelularInvalidoException("El número de celular solo debe contener dígitos.");
                 }
             }
-            break; // celular válido
+            break; 
         } catch (const CelularInvalidoException& e) {
             cout << "Error: " << e.what() << endl;
         }
@@ -654,12 +720,31 @@ UsuarioTrabajador* registrarTrabajador(Empresa* empresa, map<string, UsuarioTrab
     }
 }
 
-
 UsuarioAdministrador* registrarAdministrador(Empresa* empresa, map<string, UsuarioAdministrador*>& admins, string id, string pass) {
     string nombre, dni;
     cout << "Registro de administrador\n";
-    cout << "Nombre: "; cin >> nombre;
-    cout << "DNI: "; cin >> dni;
+    
+    cin.ignore();
+    while (true) {
+        cout << "Nombre: ";
+        getline(cin, nombre);
+        try {
+            validarLetra(nombre);
+            break;
+        } catch (const invalid_argument& e) {
+            cout << "Error: " << e.what() << endl;
+        }
+    }
+    while (true) {
+        cout << "DNI: ";
+        getline(cin, dni);
+        try {
+            validarDni(dni);
+            break;
+        } catch (const invalid_argument& e) {
+            cout << "Error: " << e.what() << endl;
+        }
+    }
 
     UsuarioAdministrador* admin = new UsuarioAdministrador(nombre, dni, id, pass, empresa);
     admins[id] = admin;
@@ -667,7 +752,6 @@ UsuarioAdministrador* registrarAdministrador(Empresa* empresa, map<string, Usuar
 
     return admin;
 }
-
 
 
 void GestorArchivos::cargarTrabajadores(Empresa* empresa, map<string, UsuarioTrabajador*>& trabajadores) {
@@ -690,6 +774,14 @@ void GestorArchivos::cargarTrabajadores(Empresa* empresa, map<string, UsuarioTra
         getline(ss, afpTipo, '|');
         ss >> faltas; ss.ignore();
         getline(ss, tipo);
+        
+        //**
+        while (true) {
+            cout << "AFP (Integra, Prima, Profuturo): ";
+            cin >> afpTipo;
+            if (afpTipo == "Integra" || afpTipo == "Prima" || afpTipo == "Profuturo") break;
+            cout << "AFP no válida. Ingrese: Integra, Prima o Profuturo.\n";
+        }
 
         AFP* afp = nullptr;
         if (afpTipo == "AFP Integra") afp = new AFPIntegra();
@@ -729,7 +821,6 @@ void GestorArchivos::cargarAdministradores(Empresa* empresa, map<string, Usuario
     file.close();
 }
 
-
 void menuTrabajador(UsuarioTrabajador* t, map<string, UsuarioTrabajador*>& usuariosTrabajadores) {
     if (t->estaEnSesion()) {
         int opcion;
@@ -761,11 +852,34 @@ void menuTrabajador(UsuarioTrabajador* t, map<string, UsuarioTrabajador*>& usuar
                     }
                 }
 
-                cout << "Nuevo DNI: ";
-                cin >> dni;
+                while (true) {
+                    cout << "Nuevo DNI: ";
+                    getline(cin, dni);
+                    try {
+                        validarDni(dni);
+                        break;
+                    } catch (const invalid_argument& e) {
+                        cout << "Error: " << e.what() << endl;
+                    }
+                }
 
-                cout << "Nuevo celular: ";
-                cin >> celular;
+                while (true) {
+                    cout << "Celular: ";
+                    getline(cin, celular);
+                    try {
+                        if (celular.length() != 9) {
+                            throw CelularInvalidoException("El número de celular debe tener exactamente 9 dígitos.");
+                        }
+                        for (char c : celular) {
+                            if (!isdigit(c)) {
+                                throw CelularInvalidoException("El número de celular solo debe contener dígitos.");
+                            }
+                        }
+                        break; 
+                    } catch (const CelularInvalidoException& e) {
+                        cout << "Error: " << e.what() << endl;
+                    }
+                }
 
                 while (true) {
                     cout << "Nuevo nro de hijos: ";
@@ -782,8 +896,12 @@ void menuTrabajador(UsuarioTrabajador* t, map<string, UsuarioTrabajador*>& usuar
                     }
                 }
 
-                cout << "Nueva AFP (Integra, Prima, Profuturo): ";
-                cin >> afpTipo;
+                while (true) {
+                    cout << "Nueva AFP (Integra, Prima, Profuturo): ";
+                    cin >> afpTipo;
+                    if (afpTipo == "Integra" || afpTipo == "Prima" || afpTipo == "Profuturo") break;
+                    cout << "AFP no válida. Ingrese: Integra, Prima o Profuturo.\n";
+                }
 
                 AFP* afp = nullptr;
                 if (afpTipo == "Integra") afp = new AFPIntegra();
@@ -809,7 +927,6 @@ void menuTrabajador(UsuarioTrabajador* t, map<string, UsuarioTrabajador*>& usuar
     }
 }
 
-
 void menuAdmin(UsuarioAdministrador* admin, Nomina& n, Empresa& empresa, map<string, UsuarioTrabajador*>& usuariosTrabajadores){
     if (admin->estaEnSesion()) {
         int op2;
@@ -818,8 +935,19 @@ void menuAdmin(UsuarioAdministrador* admin, Nomina& n, Empresa& empresa, map<str
             cin >> op2;
             if (op2 == 1) {
                 string dni;
-                cout << "DNI del empleado a actualizar: ";
-                cin >> dni;
+                cin.ignore();
+                
+                while (true) {
+                    cout << "DNI del empleado a actualizar: ";
+                    getline(cin, dni);
+                    try {
+                        validarDni(dni);
+                        break;
+                    } catch (const invalid_argument& e) {
+                        cout << "Error: " << e.what() << endl;
+                    }
+                }
+                
                 UsuarioTrabajador* t = empresa.buscarPorDni(dni);
                 if (t) admin->actualizarDatosEmpleado(t);
                 else cout << "No se encontro empleado.\n";
@@ -830,6 +958,7 @@ void menuAdmin(UsuarioAdministrador* admin, Nomina& n, Empresa& empresa, map<str
                 admin->actualizarDatosEmpresa();
 
             } else if (op2 == 3) {
+                cin.ignore();
                 while (true){
                     int r;
                     cout << "\n1. Nomina completa\n2. Boleta por DNI\n3. Sueldo neto por mes (con faltas)\n4. Volver\nOpcion: ";
@@ -838,7 +967,18 @@ void menuAdmin(UsuarioAdministrador* admin, Nomina& n, Empresa& empresa, map<str
                         admin->generarReporteGeneral(n);
                     } else if (r == 2) {
                         string dni;
-                        cout << "DNI: "; cin >> dni;
+   
+                        while (true) {
+                            cout << "DNI: ";
+                            getline(cin, dni);
+                            try {
+                                validarDni(dni);
+                                break;
+                            } catch (const invalid_argument& e) {
+                                cout << "Error: " << e.what() << endl;
+                            }
+                        }
+                        
                         UsuarioTrabajador* t = empresa.buscarPorDni(dni);
                         if (t){
                             admin->ReporteDni(t);
@@ -848,12 +988,49 @@ void menuAdmin(UsuarioAdministrador* admin, Nomina& n, Empresa& empresa, map<str
                         }
                             
                     } else if (r == 3) {
+                        cin.ignore();
                         string dni;
                         int faltas;
-                        cout << "DNI: "; cin >> dni;
+                        string entradaFaltas;
+
+                        while (true) {
+                            cout << "DNI: ";
+                            getline(cin, dni);
+                            try {
+                                validarDni(dni);
+                                break;
+                            } catch (const invalid_argument& e) {
+                                cout << "Error: " << e.what() << endl;
+                            }
+                        }
                         UsuarioTrabajador* t = empresa.buscarPorDni(dni);
                         if (t){
-                            cout << "Inasistencias: "; cin >> faltas;
+
+                        while (true) {
+                            cout << "Inasistencias: ";
+                            cin >> entradaFaltas;
+                        
+                            try {
+                                if (entradaFaltas.empty()) {
+                                    throw invalid_argument("Debe ingresar al menos un dígito.");
+                                }
+                        
+                                for (char c : entradaFaltas) {
+                                    if (!isdigit(c)) {
+                                        throw invalid_argument("Las inasistencias solo deben contener números.");
+                                    }
+                                }
+                        
+                                faltas = stoi(entradaFaltas); 
+                                break;
+                        
+                            } catch (const invalid_argument& e) {
+                                cout << "Error: " << e.what() << endl;
+                            } catch (...) {
+                                cout << "Error inesperado. Intente nuevamente.\n";
+                            }
+                        }
+                            
                             t->setInasistencias(faltas);
                             admin->SueldoMes(t);
                             GestorArchivos::guardarTrabajadores(usuariosTrabajadores);
@@ -938,7 +1115,7 @@ int main() {
                         menuTrabajador(t,trabajadores);
                     }
                     break;
-                }
+                } //fin de case 1
         
                 case 2: {
                     cin.ignore();
@@ -969,7 +1146,7 @@ int main() {
                         menuAdmin(admin,n,empresa,trabajadores);
                     }
                     break;
-                } 
+                } //fin de case 2
                 case 3: {
                     cout << "Saliendo del sistema...\n";
                     return 0;
@@ -988,5 +1165,4 @@ int main() {
     }
     return 0;
 }
-
 
