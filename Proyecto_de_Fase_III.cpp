@@ -501,7 +501,7 @@ public:
         while (true) {
             cout << "Ingrese nuevo RUC: ";
             cin >> nuevoRuc;
-    
+              
             try {
                 if (nuevoRuc.length() != 9) {
                     throw invalid_argument("El RUC debe tener exactamente 9 dígitos.");
@@ -520,7 +520,6 @@ public:
         }
         cout << "Ingrese nueva dirección: ";
         cin>>nuevaDir;
-
         empresa->actualizarDatos(nuevoNombre, nuevoRuc, nuevaDir);
     }
 
@@ -1165,4 +1164,3 @@ int main() {
     }
     return 0;
 }
-
