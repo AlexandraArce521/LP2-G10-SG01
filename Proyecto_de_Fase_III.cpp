@@ -361,7 +361,7 @@ public:
 }
 };
 void guardarNomina(const Nomina& nomina) {
-    ofstream file("nomina.txt");
+    ofstream file("nomina.txt", ios::app);
     file << left;
     file << setw(15) << "NOMBRE" << setw(12) << "DNI" << setw(10) << "TIPO"
          << setw(15) << "AFP" << setw(10) << "FALTAS"
@@ -614,7 +614,7 @@ UsuarioAdministrador* registrarAdministrador(Empresa* empresa, map<string, Usuar
 }
 
 void guardarTrabajadores(const map<string, UsuarioTrabajador*>& trabajadores) {
-    ofstream file("trabajadores.txt");
+    ofstream file("trabajadores.txt", ios::app);
     for (const auto& par : trabajadores) {
         string id = par.first;
         UsuarioTrabajador* t = par.second;
@@ -626,7 +626,7 @@ void guardarTrabajadores(const map<string, UsuarioTrabajador*>& trabajadores) {
 }
 
 void guardarAdministradores(const map<string, UsuarioAdministrador*>& admins) {
-    ofstream file("administradores.txt");
+    ofstream file("administradores.txt", ios::app);
     for (const auto& par : admins) {
         string id = par.first;
         UsuarioAdministrador* admin = par.second;
