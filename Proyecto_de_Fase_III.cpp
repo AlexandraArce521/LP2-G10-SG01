@@ -824,11 +824,11 @@ int main() {
     cargarTrabajadores(&empresa, trabajadores);
     cargarAdministradores(&empresa, administradores);
 
-    vector <string> menu = {"\n____________________________________________________",
+    vector <string> menu = {"\n__________________",
                                 "1. Inciar sesion como Trabajador",
                                 "2. Iniciar sesion como Administrador",
                                 "3. Salir",
-                                "____________________________________________________\n"
+                                "__________________\n"
                                 };
 
     while (true) {
@@ -873,6 +873,7 @@ int main() {
                         }while (t->iniciarSesion(id, pass)==false);
                         menuTrabajador(t,trabajadores);
                     }
+                    break;
                 }
         
                 case 2: {
@@ -900,6 +901,7 @@ int main() {
                         }while (admin->iniciarSesion(id, pass)==false);
                         menuAdmin(admin,n,empresa,trabajadores);
                     }
+                    break;
                 } 
                case 3: {
                     cout << "Saliendo del sistema...\n";
