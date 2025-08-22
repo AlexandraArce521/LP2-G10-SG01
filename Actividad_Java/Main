@@ -1,0 +1,15 @@
+
+public class Main {
+
+    public static void main(String[] args) {
+
+    	        Personaje jugador1 = new Personaje("Alice", "Mago");
+    	        Personaje jugador2 = new Personaje("Bob", "Guerrero");
+
+    	        jugador1.atacar(jugador2);
+    	        jugador2.atacar(jugador1);
+    	    
+    	
+
+    }
+}
